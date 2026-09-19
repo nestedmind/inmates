@@ -1,0 +1,13 @@
+{
+  "name": "inmates",
+  "version": "0.1.0",
+  "description": "Skills for agent personas: role-based working procedures for coding agents.",
+  "author": {
+    "name": "the0xLab",
+    "url": "https://github.com/the0xLab"
+  },
+  "homepage": "https://github.com/the0xLab/inmates",
+  "repository": "https://github.com/the0xLab/inmates",
+  "license": "MIT",
+  "skills": "./skills/"
+}
