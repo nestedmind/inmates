@@ -1,6 +1,6 @@
 ---
 name: review-comment-triage
-description: Work through review comments on a pull request in a disciplined order. Categorise every comment as BLOCKER, SUGGESTION or QUESTION before touching any file, apply a fixed hierarchy of authority, reply to every comment, and commit one fix at a time. Use whenever a PR has received comments from a human or an automated reviewer and you are about to act on them.
+description: Use when a pull request has received review comments from a human or an automated reviewer and you are about to act on them.
 ---
 
 # Review comment triage
@@ -61,7 +61,7 @@ You do not have to agree with every comment, but you must not ignore one.
 Fix without discussion:
 - Anything that violates the project rules file
 - Security vulnerabilities
-- Functional bugs
+- Confirmed functional bugs
 - Missing tests
 
 You may push back, with reasoning, on:

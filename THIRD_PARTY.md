@@ -9,6 +9,7 @@ Update this file whenever a skill lands that comes from an outside source.
 Source: https://github.com/obra/superpowers
 Author: Jesse Vincent
 License: MIT
+Copyright: Copyright (c) 2025 Jesse Vincent
 
 Skills adapted from this project are listed below.
 
