@@ -1,6 +1,6 @@
 ---
 name: changelog-post-pr
-description: Post-PR documentation process and changelog discipline. Use when a pull request has its approvals and is about to merge, when writing or reviewing a CHANGELOG.md entry, when asked to record what a PR changed and why, or at the start of a session to check that recently merged PRs did not skip their changelog entry. Covers the Keep a Changelog format with an added "Decisions recorded" section, and bundling the docs into the PR itself.
+description: Use when a pull request has its approvals and is about to merge, when writing or reviewing a CHANGELOG.md entry, when asked to record what a PR changed and why, or at the start of a session to check that recently merged PRs did not skip their changelog entry.
 ---
 
 # Changelog and post-PR process
@@ -13,7 +13,7 @@ Do the post-PR docs inside the same PR, before merging. Push them as extra commi
 
 Do not merge first and circle back. Do not open a separate `chore/` PR for it. The split is how these updates go missing: once the PR is merged the urgency is gone, the next ticket starts, and the entry never gets written.
 
-This is a standing exception to "one change per PR". Docs that describe a PR belong to that PR and need no separate approval.
+This is a standing exception to "one change per PR". Docs that describe a PR belong to that PR and need no separate ticket or PR. If your process approves a specific head, the docs commits change the head, so re-confirm approval before merging (see step 4).
 
 Do this without being asked. A review loop is not complete until it is done.
 
@@ -140,7 +140,7 @@ If something is missing, do the catch-up as its own small `chore/` PR before sta
 
 ## Relation to the product-update pattern
 
-A separate pattern exists for a coordinator: a `PRODUCT_UPDATE.md` running log, used on the kalekit auth-hardening backlog. It is a close cousin of the changelog, and the two are related competencies, not one.
+A separate pattern exists for a coordinator: a `PRODUCT_UPDATE.md` running log, kept by a coordinator on a multi-ticket backlog. It is a close cousin of the changelog, and the two are related competencies, not one.
 
 | | Changelog (this skill) | Product update |
 |---|---|---|
