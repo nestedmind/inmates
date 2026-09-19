@@ -31,6 +31,14 @@ A persona's name lives in the skill that defines it. To rename one, change the `
 
 Each persona can run under its own GitHub account, so commits, pull requests and reviews show who did what. This is optional, and everything in the repo works with your own `gh` login and git identity. The setup steps, and which ones only a person can do, are in [docs/identity-wiring.md](docs/identity-wiring.md).
 
+## Limitations
+
+**GitHub comments and @-mentions do not reach a running session.** Commenting on a persona's name in an issue or pull request does not wake it or push the comment into the session. Nothing in the session listens for GitHub events, and a persona only sees a comment when it goes and looks.
+
+Workaround: tell the session directly, and the persona reads the comment then. Alternatively, have the session poll the persona account's GitHub notifications on an interval, for example with `/loop` or a cron job. Polling has lag of up to one interval, and it only runs while the session is open. A comment is not sign-off: the persona reports what it said and waits for the user before acting.
+
+Automatic pickup of GitHub comments is out of scope for now.
+
 ## License
 
 MIT. See `LICENSE`. Adapted skills are credited in `THIRD_PARTY.md`.
