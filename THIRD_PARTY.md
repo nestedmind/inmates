@@ -10,4 +10,6 @@ Source: https://github.com/obra/superpowers
 Author: Jesse Vincent
 License: MIT
 
-Skills adapted from this project are listed below. No skills are listed yet.
+Skills adapted from this project are listed below.
+
+- `skills/writing-skills`, adapted from `skills/writing-skills/SKILL.md` upstream. Changes: removed the superpowers namespace and cross-skill references, dropped the multi-runtime path references (Claude Code and Codex only), and folded the testing methodology into the skill body.
