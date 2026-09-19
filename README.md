@@ -33,11 +33,11 @@ Each persona can run under its own GitHub account, so commits, pull requests and
 
 ## Limitations
 
-**GitHub comments and @-mentions do not reach a running session.** Commenting on a persona's name in an issue or pull request does not wake it or push the comment into the session. Nothing in the session listens for GitHub events, and a persona only sees a comment when it goes and looks.
+**GitHub comments and @-mentions do not reach a session running on your machine.** Commenting on a persona's name in an issue or pull request does not wake it or send the comment into the session. The session does not listen for GitHub events, so a persona reads a comment only when it checks for one.
 
-Workaround: tell the session directly, and the persona reads the comment then. Alternatively, have the session poll the persona account's GitHub notifications on an interval, for example with `/loop` or a cron job. Polling has lag of up to one interval, and it only runs while the session is open. A comment is not sign-off: the persona reports what it said and waits for the user before acting.
+Workaround: tell the session about the comment, and the persona reads it then. Or have the session poll the persona account's GitHub notifications on an interval, for example with `/loop` or a cron job. A poll picks up a comment up to one interval late, and it runs only while the session is open. A comment does not start work on its own. The persona reports what the comment says, and starts only when the user tells it to.
 
-Automatic pickup of GitHub comments is out of scope for now.
+A hosted route exists: the [Claude Code GitHub Action](https://github.com/anthropics/claude-code-action) responds to @claude mentions on issues and pull requests. This repo does not set it up or cover it. Automatic pickup of GitHub comments in a local session is out of scope for now.
 
 ## License
 
