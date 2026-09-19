@@ -15,7 +15,7 @@ Writing a skill is test-driven development applied to process documentation. You
 
 A skill is a reusable reference for a technique, pattern or tool. It is not a story about how you solved a problem once.
 
-**Repo rule:** every later persona or competency skill in this repo must be pressure-tested by this process before it counts as done. Skills written before this one landed are not retroactively required to be tested, but any later edit to them is.
+**Repo rule:** every later persona or competency skill in this repo must be pressure-tested by this process before it counts as done. Skills written before this one landed are not retroactively required to be tested.
 
 ## Where skills live
 
@@ -167,13 +167,14 @@ Name by what you do or by the core insight, verb-first, gerunds for processes: `
 
 ### Token efficiency
 
-Frequently loaded skills cost tokens in every conversation.
+Two rules set the length of a skill.
 
-- Workflows loaded at session start: under 150 words.
-- Other frequently loaded skills: under 200 words.
-- Everything else: under 500 words where possible.
+- A skill loaded at session start stays under about 200 words.
+- Every other skill keeps its SKILL.md body under 500 lines. Move long reference into separate files in the skill directory.
 
-Move flag lists to `--help`, cross-reference other skills instead of repeating them, compress examples, and remove redundancy. Check with `wc -w skills/<name>/SKILL.md`.
+The reason is how skills load. The description is always loaded. The body loads when the skill triggers. Other files load only when the agent needs them. Keep the always-loaded parts small and put bulk where it loads on demand.
+
+Move flag lists to `--help`, cross-reference other skills instead of repeating them, compress examples, and remove redundancy. Check with `wc -w skills/<name>/SKILL.md` and `wc -l skills/<name>/SKILL.md`.
 
 ### Cross-references
 
