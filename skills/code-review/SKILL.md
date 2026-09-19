@@ -1,6 +1,7 @@
 ---
 name: code-review
-description: Use when requesting or performing a balanced, cooperative code review of finished work against its requirements, such as after completing a feature, before merging, or when asked to review a diff.---
+description: Use when requesting or performing a balanced, cooperative code review of finished work against its requirements, such as after completing a feature, before merging, or when asked to review a diff.
+---
 
 # Code Review (requesting and giving)
 
