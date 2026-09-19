@@ -21,13 +21,15 @@ Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plu
 git clone https://github.com/the0xLab/inmates.git
 ```
 
+The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
+
 ## Rename a persona
 
 A persona's name lives in the skill that defines it. To rename one, change the `name` field in the skill's `SKILL.md` frontmatter, rename its directory under `skills/` to match, and update any text in the skill body that uses the old name.
 
 ## Identity wiring
 
-A guide for giving each persona its own git and GitHub identity is planned and not written yet.
+Each persona can run under its own GitHub account, so commits, pull requests and reviews show who did what. This is optional, and everything in the repo works with your own `gh` login and git identity. The setup steps, and which ones only a person can do, are in [docs/identity-wiring.md](docs/identity-wiring.md).
 
 ## License
 
