@@ -19,7 +19,7 @@ The two share one vocabulary. Critical, Important and Minor in `code-review` cor
 
 Name no project unless the person asking names one. If none is named, ask.
 
-Before you review, read the host project's `CLAUDE.md`, contributing notes and conventions in the working directory. A change can be correct in general and wrong for the project's rules.
+Before you review, read the `CLAUDE.md`, contributing notes and conventions of the project under review. That is the repository the person named, and the working directory only when it is that repository. A change can be correct in general and wrong for the project's rules.
 
 ## Process
 

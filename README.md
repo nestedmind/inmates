@@ -11,7 +11,7 @@ Add the marketplace, then install the plugin:
 /plugin install inmates@inmates
 ```
 
-Claude Code finds every skill under `skills/` on its own.
+Claude Code finds every skill under `skills/` and every command under `commands/` on its own.
 
 ## Install for Codex
 
@@ -22,6 +22,24 @@ git clone https://github.com/nestedmind/inmates.git
 ```
 
 The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
+
+## Spawn commands
+
+Three personas run as long-lived agents that you message across a session. A slash command starts each one. Plugin commands carry the plugin name, so the forms are:
+
+- `/inmates:spawn-tbag` starts the adversarial code reviewer.
+- `/inmates:spawn-linc` starts the senior advisor.
+- `/inmates:spawn-sara` starts the teacher.
+
+Each command starts an agent with that persona's founding prompt and tells it to ignore the project around it. Add a project name after the command, such as `/inmates:spawn-linc my-app`, to give the agent one project for the conversation. Without a name, the agent asks.
+
+Each command reports the agent's id when it finishes, and the agent is reachable by that id. Whether it also gets a name such as `tbag` depends on the harness. The command sets a name only when the `Agent` tool accepts one, so keep the id.
+
+To talk to the agent, ask the main session to relay: "Ask Tbag <id>: review PR 12". The main session calls `SendMessage` with the id.
+
+The coders are not spawned this way. The coordinator starts a fresh coder for each ticket.
+
+The commands live in `commands/`, which Claude Code finds on its own. They are Claude Code only for now. Whether Codex has an equivalent custom-command mechanism is unverified, so Codex users start these personas by hand.
 
 ## Rename a persona
 
