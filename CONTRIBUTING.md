@@ -54,7 +54,7 @@ The plugin version lives in one place: `version` in `.claude-plugin/plugin.json`
 
 Because the version is set, users who already installed the plugin get an update only when that string changes. Bump it in any pull request that users should receive. Skip the bump for pull requests that change only docs.
 
-When you bump the version, also release it:
+Maintainers only. A contributor bumps the version in their own pull request, as above, and does not tag or publish. After a maintainer merges a version bump, the maintainer releases it:
 
 1. Merge the pull request that bumps `version` in `.claude-plugin/plugin.json`.
 2. Tag the merge commit `vX.Y.Z`, matching that version, and push the tag.
