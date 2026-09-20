@@ -23,6 +23,12 @@ git clone https://github.com/nestedmind/inmates.git
 
 The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
 
+## First run
+
+Run `/inmates:onboard` in your project. Scofield checks that `gh` is logged in, asks who you are and how you want reports, reads your `CLAUDE.md` and build files to agree the test, lint and build commands, and writes your answers to `.inmates/config.md` in the project. It adds `.inmates/` to `.gitignore`. A project board, a branch ruleset and persona accounts are offered last, and each can be skipped. One ordinary GitHub login is enough, and skipping every optional step leaves a working team. Running it again shows your current answers and asks before changing any.
+
+Without persona accounts the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request. See the fallbacks in `skills/scofield/SKILL.md`.
+
 ## Spawn commands
 
 Three personas run as long-lived agents that you message across a session. A slash command starts each one. Plugin commands carry the plugin name, so the forms are:
