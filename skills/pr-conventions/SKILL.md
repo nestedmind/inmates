@@ -25,7 +25,8 @@ Form: `<type>/<issue>-<short-description>`, lowercase, words joined by hyphens.
 |---|---|
 | `feat/` | new behavior |
 | `fix/` | a bug fix |
-| `chore/` | maintenance, docs, tooling |
+| `docs/` | documentation only |
+| `chore/` | maintenance, tooling |
 | `test/` | tests only |
 | `refactor/` | restructuring with no behavior change |
 
@@ -60,14 +61,14 @@ Use these sections, in this order. Fill every one with real content, except `Rev
 Closes #<n>
 ```
 
-- The title says what the change does, in the imperative, with no issue number and no type prefix.
+- The title says what the change does, in the imperative. Follow the project's title style if it has one.
 - Say only what you ran and saw. Write the QA result you have, with its commit, or say you have not run it. Do not write "[PASS]" ahead of time.
 - Leave out the deadline, the owner's mood and your local setup. The reader needs the change.
 
 ## Closing references
 
 - `Closes #<n>` is the last line of the PR body. For several issues, put one per line at the end.
-- It goes in the PR body only. A closing keyword in a comment, a commit message or the title does not close the issue when the PR merges.
+- It goes in the PR body. The body works for every merge method, and keeping it out of commits gives the closing line one home. A closing keyword in a comment does not close the issue when the PR merges.
 - Editing the body later (for the review summary) must leave the closing line last.
 
 ## Before you open the PR
@@ -105,7 +106,7 @@ If the QA command has not run on this head, run it and wait for it. If you canno
 ## Common mistakes
 
 - Bundling a rename or typo fix into a bug-fix PR.
-- Putting the closing reference first, in a comment, or in the title.
+- Putting the closing reference first, or only in a comment.
 - Quoting a QA result from an earlier commit.
 - Naming a deadline or a local database in the PR text.
 - Staging with `git add .` and committing an environment file.
