@@ -66,6 +66,35 @@ The plugin ships six agents in `agents/`. Each carries the skills it needs, and 
 
 Claude Code lists a plugin's agents under the plugin name, so dispatch them as `inmates:sucre` and so on. The coders read the project's test and lint commands from `.inmates/config.md`. That folder is gitignored, so a coder's fresh worktree does not hold it. The coder reads it in the main checkout, or takes the commands from the dispatch prompt.
 
+## Uninstall
+
+**Uninstalling has not been tested on this plugin.** The commands below come from the Claude Code plugin documentation ([Manage installed plugins](https://code.claude.com/docs/en/discover-plugins#manage-installed-plugins) and [Manage marketplaces](https://code.claude.com/docs/en/discover-plugins#manage-marketplaces)), and we checked each one against that page. Nobody has run them on this plugin yet. If one fails, please tell us on the [issues page](https://github.com/nestedmind/inmates/issues).
+
+Remove the plugin, inside Claude Code:
+
+```
+/plugin uninstall inmates@inmates
+```
+
+This opens the plugin panel and leaves it open. Press Esc to close it. You can also run `/plugin`, open the Installed tab, select the plugin and choose uninstall. From a shell, `claude plugin uninstall inmates@inmates` does the same without the panel. If you installed it for a project, add `--scope project`.
+
+To keep the plugin but turn it off, run `/plugin disable inmates@inmates`. Turn it back on with `/plugin enable inmates@inmates`.
+
+Optionally, remove the marketplace too:
+
+```
+/plugin marketplace remove inmates
+```
+
+The docs warn that removing a marketplace uninstalls any plugins you installed from it.
+
+Uninstalling does not touch what the plugin's work left behind. Clean these up by hand if they exist:
+
+- The `.inmates/` folder in each project where you ran onboarding, and the `.gitignore` line that ignores it.
+- An `"agent": "inmates:scofield"` line in `.claude/settings.json`, if you opted in to run Scofield as the main session.
+- Coder worktrees and branches in your projects.
+- Token files under `~/.config/inmates/`, if you set up persona accounts. Also delete those tokens on GitHub.
+
 ## Run Scofield as the main session
 
 Nothing makes Scofield the default. The plugin does not set `"agent"` in a `settings.json`, because that would change every session of everyone who installs it. To run as Scofield, pick one:
