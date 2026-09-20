@@ -20,6 +20,8 @@ This fits a role whose value builds up over many exchanges:
 - A standing reviewer reviews pull request after pull request. It already knows what adversarial review means on this project, so each review starts from that shared understanding.
 - An advisor or teacher is consulted directly by the human. The value is in the back-and-forth, and it depends on the agent remembering what it already explained or was already asked.
 
+A standing reviewer's context grows as well, with every diff it reads. Keep its standards in its skill, not only in its memory, and restart it when its context gets long. The restarted agent reads the skill and loses nothing that mattered.
+
 Both roles get pinged by several parties at times nobody can predict. A fresh agent would need the same background restated on every call, and a persistent one keeps it.
 
 ## Fresh dispatch per task

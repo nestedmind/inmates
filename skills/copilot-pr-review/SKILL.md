@@ -38,13 +38,14 @@ An empty `reviewRequests` list means "not pending", and says nothing about wheth
 
 2. Wait for a posted review, and ignore the request state. Poll the `reviews` list for an entry from that login and budget about 2 minutes:
    ```bash
-   until gh pr view <n> --repo <owner>/<repo> --json reviews \
+   for i in $(seq 1 36); do   # 36 x 5 s = 3 minutes at most
+     gh pr view <n> --repo <owner>/<repo> --json reviews \
        --jq '.reviews[] | select(.author.login == "copilot-pull-request-reviewer")' \
-       2>/dev/null | grep -q .; do
+       2>/dev/null | grep -q . && break
      sleep 5
    done
    ```
-   Run the poll in the background if you have other work while it posts.
+   The loop stops after 3 minutes. If no review has posted by then, say so and ask the owner whether to wait longer. Do not conclude Copilot is unavailable. Run the poll in the background if you have other work while it posts, and leave no poll running when you finish.
 
 3. Read Copilot's findings before you finalize your own review. The review body carries a verdict line and inline comments on specific lines. Treat them as input, the way you would read a colleague's review before adding yours.
 
@@ -56,7 +57,7 @@ An empty `reviewRequests` list means "not pending", and says nothing about wheth
 
 ## Who handles which round
 
-The rounds follow the same ladder as the reviewer protocol in the `scofield` skill.
+The rounds follow the same ladder as the reviewer protocol in the `scofield` skill. They apply only after the owner has requested Copilot.
 
 - Rounds 1 and 2: the coder handles Copilot's findings directly against the false-positive list below, fixes what is real and requests again. Escalate sooner when a finding might be a false positive that is not on the list, touches a security or concurrency property, or conflicts with a project convention the coder is unsure of.
 - Round 3 to 5: the coordinator takes over. When escalating, state the round number so the running count stays accurate.

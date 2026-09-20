@@ -46,7 +46,7 @@ Another skill may set an output format, such as severity tiers for a review or t
 **Clipped causal chains.** Join the steps with "but", "and", "because" or "so".
 
 - Before: "Latency was high. We added an index. It dropped."
-- After: "Latency was high because the email lookup scanned the table, so we added an index."
+- After: "The query plan showed a full table scan on the email lookup, so we added an index, and p95 latency fell from 840 ms to 210 ms."
 
 ## Structure
 
@@ -62,3 +62,7 @@ Before you send the text, ask two questions.
 
 1. Can I remove words and keep the meaning? If so, remove them.
 2. Is any sentence built for effect instead of clarity? If so, rewrite it flat.
+
+## Related skills
+
+`verification-before-completion` covers the evidence behind rule 6: run the check and read its output before you write "fixed" or "passing".

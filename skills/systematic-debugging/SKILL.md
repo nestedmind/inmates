@@ -107,3 +107,7 @@ Sometimes the cause is environmental, timing-dependent, or external. Then docume
 | 2. Pattern | Find working examples, compare | You have listed the differences |
 | 3. Hypothesis | Form a theory, test it minimally | It is confirmed or replaced |
 | 4. Implementation | Write test, fix, verify | Bug gone, tests pass |
+
+## Related skills
+
+`test-driven-development` covers the failing test in Phase 4. `verification-before-completion` covers the check that the bug is gone before you say so. `plain-writing` covers how to report the cause and the fix.
