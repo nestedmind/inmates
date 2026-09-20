@@ -27,7 +27,7 @@ The coders set `isolation: worktree` in their frontmatter, and we did not dispat
 Use a machine, container or user account that has Claude Code and `gh` but no copy of this repo, no `~/.claude/agents/` files from this project, no `.inmates/` folder and no tokens.
 
 - [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/inmates`, then `/plugin install inmates@inmates`. Both succeed with no manual copying.
-- [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `inmates:`". The answer lists `inmates:scofield`, `inmates:tbag`, `inmates:sucre`, `inmates:mahone`, `inmates:sheba` and `inmates:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses the same prompt headless.)
+- [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `inmates:`". The answer lists `inmates:scofield`, `inmates:tbag`, `inmates:sucre`, `inmates:mahone`, `inmates:sheba` and `inmates:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses a similar prompt headless.)
 - [ ] Type `/inmates:`. `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
 - [ ] Ask "which skills do you have from the inmates plugin?" The answer lists the skills under `skills/`.
 
@@ -45,6 +45,17 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 - [ ] Repeat Parts 2 and 3 in a second real project that is not this one, on a project with different test and lint commands. Record which commands onboarding proposed and which you had to correct.
 - [ ] Run one ticket through the whole loop there: dispatch, review, approval, merge, cleanup of the worktree and branches.
 - [ ] Record anything that only worked because of setup on your own machine.
+
+## Tear down (for the owner)
+
+Run this last, on the clean machine from Part 2. The boxes are unticked because uninstall has not been run on this plugin. The commands come from the Claude Code plugin docs and are listed in [the README](../README.md#uninstall).
+
+- [ ] Run `/plugin uninstall inmates@inmates`, then press Esc to close the panel. Type `/inmates:`. None of `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` or `spawn-sara` is offered. If they still appear, run `/reload-plugins` and check again, and note that you had to.
+- [ ] Ask "List the agent types you can dispatch whose names start with `inmates:`". None of the six `inmates:` agents is listed.
+- [ ] Run `/plugin marketplace remove inmates`. Run `/plugin marketplace list`. The `inmates` marketplace is gone.
+- [ ] In each project where you ran onboarding, delete the `.inmates/` folder and the `.gitignore` line that ignores it. If you added `{"agent": "inmates:scofield"}` to `.claude/settings.json`, remove that line.
+- [ ] Delete any worktrees and branches the test coder made, and any token files under `~/.config/inmates/` you created for the test. Delete those tokens on GitHub too.
+- [ ] Delete the test user or container.
 
 ## Report the result
 
