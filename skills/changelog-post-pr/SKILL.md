@@ -5,6 +5,8 @@ description: Use when a pull request has its approvals and is about to merge, wh
 
 # Changelog and post-PR process
 
+**REQUIRED SUB-SKILL:** Use `plain-writing` for the prose inside changelog entries and review summaries. The entry format below takes precedence.
+
 A merged PR is not finished until the project's written record reflects it. This skill is the procedure for closing that gap: which files to update, in what order, and why it all belongs in the PR being merged rather than in a follow-up.
 
 ## The one rule that matters

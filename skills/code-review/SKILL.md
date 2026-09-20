@@ -5,6 +5,8 @@ description: Use when requesting or performing a balanced, cooperative code revi
 
 # Code Review (requesting and giving)
 
+**REQUIRED SUB-SKILL:** Use `plain-writing` for the prose in requests and review comments. The severity tiers and format below take precedence.
+
 Adapted from `skills/requesting-code-review/` in obra/superpowers (MIT, Jesse Vincent). See `THIRD_PARTY.md`.
 
 Catch problems before they cascade into more work. The reviewer gets precisely crafted context about the change, never the author's session history.

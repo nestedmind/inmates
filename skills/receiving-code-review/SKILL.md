@@ -5,6 +5,8 @@ description: Use when you receive code review feedback, before implementing any 
 
 # Receiving Code Review
 
+**REQUIRED SUB-SKILL:** Use `plain-writing` for the prose in your replies.
+
 Adapted from `skills/receiving-code-review/` in obra/superpowers (MIT, Jesse Vincent). See `THIRD_PARTY.md`.
 
 Code review needs technical evaluation, not emotional performance. This is the companion to `code-review`, which covers requesting and giving a balanced review.

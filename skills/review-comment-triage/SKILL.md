@@ -5,6 +5,8 @@ description: Use when a pull request has received review comments from a human o
 
 # Review comment triage
 
+**REQUIRED SUB-SKILL:** Use `plain-writing` for the prose in your replies and commit messages.
+
 Use this when a pull request has review comments from any reviewer, human or automated, and you are the one responding. It covers how to read, sort, fix, disagree and reply. It does not cover how to request or wait for a specific automated reviewer.
 
 ## Relation to the Copilot review skill
