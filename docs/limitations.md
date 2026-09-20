@@ -30,6 +30,6 @@ The repo's ruleset dismisses a pull request approval each time someone pushes to
 
 Claude Code can refuse a coder's `gh pr merge` even after the reviewer has approved. When that happens, the coder stops and reports the block to whoever coordinates the work, and that person merges or changes the permission. The coder does not retry the command or look for another way to merge.
 
-## Not shipped yet
+## Spawn commands
 
-Slash commands that start a persona directly, such as `/inmates:spawn-tbag`, are in review and are not part of a release. Until they merge, start personas through your harness's own agent mechanism.
+`/inmates:spawn-tbag`, `/inmates:spawn-linc` and `/inmates:spawn-sara` start a persona as a background agent. In the Claude Code version we tested, the Agent tool has no name option, so you reach the agent by its id, not by name. Ask the main session to relay: "Ask Tbag <id>: ...". The commands set a name only when the tool accepts one.
