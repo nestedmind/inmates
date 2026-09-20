@@ -34,6 +34,14 @@ Claude Code can refuse a coder's `gh pr merge` even after the reviewer has appro
 
 `/inmates:spawn-tbag`, `/inmates:spawn-linc` and `/inmates:spawn-sara` start a persona as a background agent. In the Claude Code version we tested, the Agent tool has no name option, so you reach the agent by its id, not by name. Ask the main session to relay: "Ask Tbag <id>: ...". The commands set a name only when the tool accepts one.
 
+## Install and default agent are untested on a clean machine
+
+The plugin loads and its agents resolve under `claude -p --plugin-dir`. Nobody has yet run `/plugin install` on a clean machine, checked a fresh interactive session, or piloted the team in a second project. Those runs are the checklist in [smoke-test.md](smoke-test.md). The plugin does not make Scofield the default agent. See the README for how to opt in.
+
+## Agents and commands are Claude Code only
+
+Codex reads `skills/`. It has no path here for the agents or the spawn commands.
+
 ## Onboarding
 
-The onboarding skill has been pressure-tested with subagents that answer for the person, and it has not been run end to end on a clean machine with a real person. The steps for that run are in the pull request that added it. The onboarding skill writes a project-local file the agent definitions read on their own initiative. Nothing enforces that a coder reads it, so the coordinator puts the commands in each dispatch prompt.
+The onboarding skill has been pressure-tested with subagents that answer for the person, and it has not been run end to end on a clean machine with a real person. The steps for that run are in [smoke-test.md](smoke-test.md), Part 3. The onboarding skill writes a project-local file the agent definitions read on their own initiative. Nothing enforces that a coder reads it, so the coordinator puts the commands in each dispatch prompt.

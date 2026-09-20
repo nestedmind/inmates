@@ -1,0 +1,50 @@
+# Smoke test
+
+This page checks that installing the plugin once gives a working team. Part 1 is automatic. Parts 2 to 4 need a person on a clean machine, and nothing in them is ticked until someone runs it. A box marked `[x]` was run and passed, and the note beside it says by whom and on what.
+
+## Part 1: checks anyone can run
+
+Run these from a clone of the repo. They passed on one Linux machine with Claude Code 2.1.278.
+
+- [x] `scripts/check-agents.sh` prints `ok: agent definitions pass`. It checks that each of the six agents exists, that its name matches its file, that every skill in its `skills:` list exists under `skills/`, and that no agent file holds a home path, an account name or another persona's token path.
+- [x] `claude plugin validate .` passes.
+- [x] `claude -p --plugin-dir . "List the agent types whose name starts with inmates:"` lists `inmates:scofield`, `inmates:tbag`, `inmates:sucre`, `inmates:mahone`, `inmates:sheba` and `inmates:whip`.
+
+## What was tested about the default agent and skill names
+
+Tested with a throwaway plugin that used a unique agent name, so no user-level agent could hide the result. Version 2.1.278, headless (`claude -p`), from a directory outside the repo.
+
+- A plugin `settings.json` containing `{"agent": "<name>"}` made the main thread run as that agent. It worked with the bare name.
+- `claude --agent <name>` and `claude --agent inmates:<name>` both worked. The plugin's agents also appear as dispatch types under the `inmates:` prefix.
+- `"agent": "inmates:<name>"` in a settings file passed with `--settings` worked.
+- A subagent that lists `onboarding` in `skills:` received the skill body, and so did one that lists `inmates:onboarding`. The short names in the agent files resolve.
+- A main-thread agent does not preload its `skills:` list. The skills appear in the session's skill list and load through the Skill tool, and the Skill tool accepted the short name `onboarding`. This is why `agents/scofield.md` tells Scofield to load its skills.
+
+The coders set `isolation: worktree` in their frontmatter, and we did not dispatch one to see that the plugin honours it. Part 3 checks it. We also did not test a real install through `/plugin install`, a fresh terminal session, or any interactive UI. The plugin does not ship a `settings.json`, because making Scofield the default agent for everyone who installs is opt-in. See [the README](../README.md#run-scofield-as-the-main-session).
+
+## Part 2: the clean machine (for the owner)
+
+Use a machine, container or user account that has Claude Code and `gh` but no copy of this repo, no `~/.claude/agents/` files from this project, no `.inmates/` folder and no tokens.
+
+- [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/inmates`, then `/plugin install inmates@inmates`. Both succeed with no manual copying.
+- [ ] Restart Claude Code. Type `/agents`. The six agents (scofield, tbag, sucre, mahone, sheba, whip) are listed with the `inmates` plugin as their source.
+- [ ] Type `/inmates:`. `onboard`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
+- [ ] Ask "which skills do you have from the inmates plugin?" The answer lists the skills under `skills/`.
+
+## Part 3: fresh session and onboarding (for the owner)
+
+- [ ] In a small project that has a GitHub remote and a `gh` login, start `claude --agent inmates:scofield`. The session says it is Scofield and offers onboarding, because the project has no `.inmates/config.md`. If it does not, note what it did.
+- [ ] Add `{"agent": "inmates:scofield"}` to the project's `.claude/settings.json` and start a plain `claude`. The main thread is Scofield. Remove the line again if you do not want it.
+- [ ] Run `/inmates:onboard` with a real person answering. This is the clean-machine run that the onboarding work (#19) closed without. Check that `.inmates/config.md` and `.inmates/status.md` exist, that `.inmates/` is in `.gitignore`, that the persona-account steps can be skipped, and that a second run of the command shows the saved answers and asks before changing any.
+- [ ] Run `/inmates:spawn-tbag`. It reports an agent id. Ask the main session to relay a message to that id and check that a reply comes back.
+- [ ] Sign off one small ticket and ask Scofield to dispatch a coder. Check that the coder reads the ticket, works in a worktree, opens a pull request, messages the reviewer, and stops without merging until an approval arrives. Check that the coder finds the project's commands, though `.inmates/` is missing from its worktree.
+
+## Part 4: pilot in a second project (for the owner)
+
+- [ ] Repeat Parts 2 and 3 in a second real project that is not this one, on a project with different test and lint commands. Record which commands onboarding proposed and which you had to correct.
+- [ ] Run one ticket through the whole loop there: dispatch, review, approval, merge, cleanup of the worktree and branches.
+- [ ] Record anything that only worked because of setup on your own machine.
+
+## Report the result
+
+Comment on issue #18 with the date, the machine, the Claude Code version, and which boxes passed, failed or were skipped. Edit this file only to tick a box you ran.

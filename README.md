@@ -21,7 +21,26 @@ Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plu
 git clone https://github.com/nestedmind/inmates.git
 ```
 
-The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
+Codex reads the skills only. The agents in `agents/` and the commands in `commands/` are Claude Code features, and nothing here maps them to Codex, so Codex users get the skills and run the personas by hand. The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
+
+## The team
+
+The plugin ships six agents in `agents/`. Each carries the skills it needs, and none needs a GitHub account of its own.
+
+- `scofield` coordinates: it plans, dispatches coders and reports to you.
+- `tbag` reviews pull requests against their tickets.
+- `sucre`, `mahone`, `sheba` and `whip` are coders. Each takes one ticket per dispatch, works in its own worktree, opens a pull request and merges it only after an approval.
+
+Claude Code lists a plugin's agents under the plugin name, so dispatch them as `inmates:sucre` and so on. The coders read the project's test and lint commands from `.inmates/config.md`. That folder is gitignored, so a coder's fresh worktree does not hold it. The coder reads it in the main checkout, or takes the commands from the dispatch prompt.
+
+## Run Scofield as the main session
+
+Nothing makes Scofield the default. The plugin does not set `"agent"` in a `settings.json`, because that would change every session of everyone who installs it. To run as Scofield, pick one:
+
+- Start a session with `claude --agent inmates:scofield`.
+- Or add `{"agent": "inmates:scofield"}` to your project's `.claude/settings.json`, or to your user settings, to make it the default there.
+
+A main-session agent does not preload the skills its file lists, so Scofield loads them with the Skill tool when it starts. The tests behind this are in [docs/smoke-test.md](docs/smoke-test.md).
 
 ## First run
 
@@ -69,6 +88,7 @@ A hosted route exists: the [Claude Code GitHub Action](https://github.com/anthro
 
 ## More
 
+- [docs/smoke-test.md](docs/smoke-test.md): what was tested, and the checklist for a clean-machine install and a pilot in a second project. The owner's run is still open.
 - [docs/limitations.md](docs/limitations.md): what is untested or does not work yet.
 - [docs/cost-and-safety.md](docs/cost-and-safety.md): token cost, GitHub tokens and what agents can run.
 - [CONTRIBUTING.md](CONTRIBUTING.md): how to pick a ticket, open a pull request and add a skill or persona.
