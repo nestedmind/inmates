@@ -28,11 +28,12 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 
 - [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/inmates`, then `/plugin install inmates@inmates`. Both succeed with no manual copying.
 - [ ] Restart Claude Code. Type `/agents`. The six agents (scofield, tbag, sucre, mahone, sheba, whip) are listed with the `inmates` plugin as their source.
-- [ ] Type `/inmates:`. `onboard`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
+- [ ] Type `/inmates:`. `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
 - [ ] Ask "which skills do you have from the inmates plugin?" The answer lists the skills under `skills/`.
 
 ## Part 3: fresh session and onboarding (for the owner)
 
+- [ ] In a small project that has a GitHub remote and a `gh` login, start a plain `claude` session and run `/inmates:wake-scofield`. The main session says it is Scofield and offers onboarding, because the project has no `.inmates/config.md`, and it can ask you questions. If it dispatches a background agent instead, note what it did.
 - [ ] In a small project that has a GitHub remote and a `gh` login, start `claude --agent inmates:scofield`. The session says it is Scofield and offers onboarding, because the project has no `.inmates/config.md`. If it does not, note what it did.
 - [ ] Add `{"agent": "inmates:scofield"}` to the project's `.claude/settings.json` and start a plain `claude`. The main thread is Scofield. Remove the line again if you do not want it.
 - [ ] Run `/inmates:onboard` with a real person answering. This is the clean-machine run that the onboarding work (#19) closed without. Check that `.inmates/config.md` and `.inmates/status.md` exist, that `.inmates/` is in `.gitignore`, that the persona-account steps can be skipped, and that a second run of the command shows the saved answers and asks before changing any.

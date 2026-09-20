@@ -54,6 +54,14 @@ The plugin version lives in one place: `version` in `.claude-plugin/plugin.json`
 
 Because the version is set, users who already installed the plugin get an update only when that string changes. Bump it in any pull request that users should receive. Skip the bump for pull requests that change only docs.
 
+Maintainers only. A contributor bumps the version in their own pull request, as above, and does not tag or publish. After a maintainer merges a version bump, the maintainer releases it:
+
+1. Merge the pull request that bumps `version` in `.claude-plugin/plugin.json`.
+2. Tag the merge commit `vX.Y.Z`, matching that version, and push the tag.
+3. Publish a GitHub Release from the tag, and use GitHub's "Generate release notes" to fill in the notes.
+
+A `CHANGELOG.md` is optional, and this repo does not keep one. The release notes are the record.
+
 ## License
 
 By contributing you agree that your work is released under the MIT license in `LICENSE`.

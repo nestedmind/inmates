@@ -1,10 +1,16 @@
 # inmates
 
-A plugin of skills for agent personas. Each skill gives a coding agent a working procedure for a role, such as writing skills or reviewing a pull request. Claude Code and Codex read the same `skills/` directory, so each skill exists once.
+A plugin of skills for agent personas: a team with a coordinator, a reviewer and coders, and the skills each one works from. Claude Code and Codex read the same `skills/` directory, so each skill exists once.
 
-## Install for Claude Code
+It has been tested only with Claude Code, and it is recommended for Claude Code users. Codex users are welcome to try it and send feedback. See [Codex](#codex-untested) below.
 
-Add the marketplace, then install the plugin:
+## Get started
+
+Three steps. Steps 1 and 2 are typed inside Claude Code. Step 3 is typed in a terminal.
+
+### 1. Install
+
+Inside Claude Code:
 
 ```
 /plugin marketplace add nestedmind/inmates
@@ -13,15 +19,42 @@ Add the marketplace, then install the plugin:
 
 Claude Code finds every skill under `skills/` and every command under `commands/` on its own.
 
-## Install for Codex
+### 2. Try it now: wake up Scofield
 
-Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plugin.json`, which reads skills from `./skills/`.
+Scofield is the coordinator and holds the context for the team. In a project that has a git remote on GitHub and a `gh` login, type this inside Claude Code:
 
 ```
-git clone https://github.com/nestedmind/inmates.git
+/inmates:wake-scofield
 ```
 
-Codex reads the skills only. The agents in `agents/` and the commands in `commands/` are Claude Code features, and nothing here maps them to Codex, so Codex users get the skills and run the personas by hand. The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
+`commands/wake-scofield.md` tells the current session to act as Scofield, in the main session, so it can ask you questions. It follows `agents/scofield.md`: if the project has no `.inmates/config.md`, it follows the `onboarding` skill first. That skill checks your `gh` login, git repo and repo access, asks a few questions, and writes your answers to `.inmates/config.md`. If the file exists, Scofield reads it and the status file and reports where things stand. It confirms with you before it spawns any agent.
+
+This route is untested. Nobody has run `/inmates:wake-scofield` in a live session yet. It is on the owner's checklist in [docs/smoke-test.md](docs/smoke-test.md).
+
+### 3. Coming back later, or in another terminal tab or window
+
+In a terminal, start a session as Scofield:
+
+```
+claude --agent inmates:scofield
+```
+
+This needs a new terminal session. It has not been run on a clean machine either.
+
+### Optional: have the plugin explained first
+
+Run `/inmates:spawn-sara`. It starts Sara, a teacher, as a background agent, and reports the agent's id. Sara gauges what you already know, explains in steps, and checks your understanding. Her founding prompt tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara <id>: explain how git rebase works." Add a project name after the command to give her one project for the conversation. The command file calls no `gh` command, so starting Sara needs no `gh` login. That the agent itself needs none is untested.
+
+## What you need
+
+- Claude Code, with the plugin installed as above.
+- For `/inmates:wake-scofield` and `claude --agent inmates:scofield`: a `gh` login, a git repository, and access to its GitHub repo, the same as onboarding.
+- For starting the spawn commands (`/inmates:spawn-sara`, `/inmates:spawn-linc`, `/inmates:spawn-tbag`): nothing beyond the plugin. The command files call no `gh` command. A spawned Tbag reviews pull requests, so it needs a `gh` login to do that work.
+- For `/inmates:onboard`: a `gh` login, a git repository, and access to its GitHub repo. Onboarding checks all three before it writes anything.
+- For the full team on a project (coordinator, reviewer, coders): one ordinary GitHub login is enough. Persona accounts and tokens are optional. Without them the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request.
+- Persona accounts, if you want each persona to show up under its own name: a person must create them, since GitHub requires email verification and a captcha. See [docs/identity-wiring.md](docs/identity-wiring.md).
+- A budget you can watch. Each agent is its own model session, and a team runs several at once. See [docs/cost-and-safety.md](docs/cost-and-safety.md).
+- Tested on one Linux machine only. macOS, Windows, containers and remote setups are untested, and so is `/plugin install` on a clean machine. See [docs/limitations.md](docs/limitations.md).
 
 ## The team
 
@@ -37,6 +70,7 @@ Claude Code lists a plugin's agents under the plugin name, so dispatch them as `
 
 Nothing makes Scofield the default. The plugin does not set `"agent"` in a `settings.json`, because that would change every session of everyone who installs it. To run as Scofield, pick one:
 
+- Inside a session, run `/inmates:wake-scofield`. This route is untested.
 - Start a session with `claude --agent inmates:scofield`.
 - Or add `{"agent": "inmates:scofield"}` to your project's `.claude/settings.json`, or to your user settings, to make it the default there.
 
@@ -47,6 +81,12 @@ A main-session agent does not preload the skills its file lists, so Scofield loa
 Run `/inmates:onboard` in your project. Scofield checks that `gh` is logged in, asks who you are and how you want reports, reads your `CLAUDE.md` and build files to agree the test, lint and build commands, and writes your answers to `.inmates/config.md` in the project. It adds `.inmates/` to `.gitignore`. A project board, a branch ruleset and persona accounts are offered last, and each can be skipped. One ordinary GitHub login is enough, and skipping every optional step leaves a working team. Running it again shows your current answers and asks before changing any.
 
 Without persona accounts the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request. See the fallbacks in `skills/scofield/SKILL.md`.
+
+## Commands
+
+- `/inmates:wake-scofield` makes the current session act as Scofield, the coordinator.
+- `/inmates:onboard` runs the onboarding skill only.
+- `/inmates:spawn-tbag`, `/inmates:spawn-linc` and `/inmates:spawn-sara` start a persona as an agent. See below.
 
 ## Spawn commands
 
@@ -85,6 +125,16 @@ When you stand up a team, each role runs either as a persistent, named agent or 
 Workaround: tell the session about the comment, and the persona reads it then. Or have the session poll the persona account's GitHub notifications on an interval, for example with `/loop` or a cron job. A poll picks up a comment up to one interval late, and it runs only while the session is open. A comment does not start work on its own. The persona reports what the comment says, and starts only when the user tells it to.
 
 A hosted route exists: the [Claude Code GitHub Action](https://github.com/anthropics/claude-code-action) responds to @claude mentions on issues and pull requests. This repo does not set it up or cover it. Automatic pickup of GitHub comments in a local session is out of scope for now.
+
+## Codex (untested)
+
+Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plugin.json`, which reads skills from `./skills/`.
+
+```
+git clone https://github.com/nestedmind/inmates.git
+```
+
+Codex reads the skills only. The agents in `agents/` and the commands in `commands/` are Claude Code features, and nothing here maps them to Codex, so Codex users get the skills and run the personas by hand. The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation. If you try it, please tell us what worked and what did not on the [issues page](https://github.com/nestedmind/inmates/issues).
 
 ## More
 
