@@ -48,6 +48,12 @@ An issue that reports success on an untested setup helps as well.
 
 A persona is a role with a skill that defines it, and the name lives in that skill. Follow the steps for adding a skill, and describe the role and when it is used. If the role needs its own GitHub account, see [docs/identity-wiring.md](docs/identity-wiring.md). Then decide whether it runs persistent or as a fresh dispatch using [docs/agent-lifecycle.md](docs/agent-lifecycle.md). Add a row to the team table in `skills/scofield/SKILL.md` if the persona joins that team.
 
+## Releasing
+
+The plugin version lives in one place: `version` in `.claude-plugin/plugin.json`. Do not add it to the plugin entry in `.claude-plugin/marketplace.json`. Claude Code reads the `plugin.json` value and ignores the other one.
+
+Because the version is set, users who already installed the plugin get an update only when that string changes. Bump it in any pull request that users should receive. Skip the bump for pull requests that change only docs.
+
 ## License
 
 By contributing you agree that your work is released under the MIT license in `LICENSE`.
