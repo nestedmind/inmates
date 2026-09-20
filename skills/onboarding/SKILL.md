@@ -20,7 +20,7 @@ Everything is stored in the project, in `.inmates/`. Do not store answers in per
 2. **Check prerequisites.** Run `gh auth status`, `git rev-parse --show-toplevel` and `gh repo view`. For each failure say what is missing and the one command that fixes it (`gh auth login`, `git init`, `gh repo create` or a remote to add). Stop until the required ones pass: a `gh` login, a git repo and access to its GitHub repo. Write nothing before this passes.
 3. **Ask about the person, one question at a time.** Name to use, role (for example CTO, CEO, lead), how often they want reports, how long, and where (chat, an issue comment, a file). Offer a default for each. Do not ask more than these.
 4. **Read the project.** Read `CLAUDE.md`, the contributing notes, and the build files (`Makefile`, `package.json`, `pyproject.toml` and the like). Propose the test, lint and build commands you found and any rules that bind every ticket (branch names, commit style). Ask the person to confirm or correct. Record only what they confirm. If you cannot ask, or they do not answer, write the value with `(unconfirmed)` after it and ask again next run. If you find no command, record it as unset and say so.
-5. **Write the config.** Add `.inmates/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the file if they want the team to share it.
+5. **Write the config.** Write `.inmates/config.md`, and create `.inmates/status.md` if it does not exist (see Files). Add `.inmates/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the folder if they want the team to share it. Say that a coder's fresh worktree will not contain the folder, so the coordinator puts the commands and rules in each dispatch and review request.
 6. **Offer the optional steps, each skippable, one at a time.** Say plainly that skipping all of them leaves a working team.
    - A project board, so tickets show a status.
    - A branch ruleset that requires a review before merge.
@@ -50,6 +50,7 @@ identities: done | skipped | later
 
 - Never overwrite an answer without asking. Show the current value beside the new one and ask before each change.
 - A partly finished run resumes at the first missing key. Do not ask again for keys that hold a value.
+- Offer again every optional step recorded as `later`, one at a time, before you report. Keep `done` and `skipped` as they are. Record the new answer over `later`.
 - Re-check prerequisites every time. They cost nothing.
 - Change only the keys the person named. Leave the rest.
 

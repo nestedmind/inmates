@@ -36,7 +36,7 @@ Three roles carry the rules below.
 - If a tracking board exists, give the coder the exact command to move its own ticket to "In review" the moment its pull request opens, with the project number, status field ID and option ID filled in. The coder knows when its PR exists, and you would hear about it late.
 - Isolate shared infrastructure per subagent. Worktrees of one repo share defaults, and anything that binds a fixed port, container name or project name will collide. For example, Docker Compose names its project after the directory, and every worktree of a template has the same directory name, so two streams silently share containers. Give each subagent its own explicit identifier for anything shared by default.
 - Track coordination state outside your own context. A status file with one entry per stream (ticket, PR number, review round, what it waits on) survives context compaction. Update it when state changes. Keep it in the project (`.inmates/status.md`, see `onboarding`), never in per-user memory, and treat GitHub as the truth when the file disagrees.
-- Put the project's test, lint and build commands and its rules, from `.inmates/config.md` if it exists, in each dispatch prompt.
+- Put the project's test, lint and build commands and its rules, from `.inmates/config.md` if it exists, in each dispatch prompt and review request. A fresh worktree lacks the gitignored `.inmates/` folder.
 - If a ticket depends on one that has not merged, do not start it. Record the dependency and revisit when the blocker clears.
 
 ## Persona identity (optional)
