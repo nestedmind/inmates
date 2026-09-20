@@ -19,9 +19,9 @@ GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" && pwd -P)
 git rev-parse --show-superproject-working-tree
 ```
 
-- If `GIT_DIR` differs from `GIT_COMMON` and the last command prints nothing, you are in a linked worktree. Work here and create no other.
-- If the last command prints a path, you are inside a submodule. The two directories also differ there, so this check comes first. Treat the submodule as an ordinary checkout and create a worktree only if the task needs one.
-- If they match, you are in the main checkout. Make a worktree before you change any file.
+- If the last command prints a path, you are inside a submodule. Its `GIT_DIR` and `GIT_COMMON` are equal, so it looks like a main checkout, and this check comes first. Treat it as an ordinary checkout and create a worktree only if the task needs one.
+- Otherwise, if `GIT_DIR` differs from `GIT_COMMON`, you are in a linked worktree. Work here and create no other.
+- Otherwise they match and you are in the main checkout. Make a worktree before you change any file.
 
 A harness may have placed you in a worktree already. Trust that, and do not nest another inside it.
 
@@ -92,7 +92,7 @@ Do not merge locally when the project requires review, and never push to the def
 
 ## 5. Remove the worktree
 
-After the pull request merges, remove the worktree and confirm it is gone:
+After the pull request merges, and only then, you may leave the worktree for the main checkout. Remove the worktree and confirm it is gone:
 
 ```bash
 cd <main checkout>
@@ -102,7 +102,7 @@ git worktree list
 
 - Remove it only after the merge. Keep the worktree if you chose option 3, or if review may send you back to it.
 - If `git worktree remove` refuses because of uncommitted or untracked files, stop and look at them. Never add `--force` to get past the refusal. Commit or deliberately discard the files first, and remove the worktree only when you know nothing is lost.
-- Delete the local branch after removal: `git branch -d <branch>`.
+- Delete the local branch after removal. A squash merge leaves the branch "not fully merged" to git, so `git branch -d` refuses. Confirm the pull request merged, then use `git branch -D <branch>`. The remote branch is separate; delete it only if the host has not already.
 - Prune at the next session start to catch anything a crash left behind.
 
 ## Quick reference
