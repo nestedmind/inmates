@@ -1,10 +1,10 @@
 # inmates
 
-A plugin of skills for agent personas. Each skill gives a coding agent a working procedure for a role, such as writing skills or reviewing a pull request. Claude Code and Codex read the same `skills/` directory, so each skill exists once.
+A Claude Code plugin that gives you a team of agent personas, a coordinator, a reviewer and coders, plus the skills each one works from.
 
-## Install for Claude Code
+This release is for Claude Code only.
 
-Add the marketplace, then install the plugin:
+## Install
 
 ```
 /plugin marketplace add nestedmind/inmates
@@ -13,15 +13,21 @@ Add the marketplace, then install the plugin:
 
 Claude Code finds every skill under `skills/` and every command under `commands/` on its own.
 
-## Install for Codex
+## Try this first
 
-Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plugin.json`, which reads skills from `./skills/`.
+Run `/inmates:spawn-sara`. It starts Sara, a teacher, as a background agent, and reports the agent's id. Sara gauges what you already know, explains in steps, and checks your understanding. She works from a founding prompt that tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara <id>: explain how git rebase works." Add a project name after the command to give her one project for the conversation.
 
-```
-git clone https://github.com/nestedmind/inmates.git
-```
+The command starts one agent and does nothing else. It needs no `gh` login. That the agent itself needs none is untested.
 
-Codex reads the skills only. The agents in `agents/` and the commands in `commands/` are Claude Code features, and nothing here maps them to Codex, so Codex users get the skills and run the personas by hand. The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
+## What you need
+
+- Claude Code, with the plugin installed as above.
+- For the spawn commands (`/inmates:spawn-sara`, `/inmates:spawn-linc`, `/inmates:spawn-tbag`): nothing beyond the plugin. The command files call no `gh` command.
+- For `/inmates:onboard`: a `gh` login, a git repository, and access to its GitHub repo. Onboarding checks all three before it writes anything.
+- For the full team on a project (coordinator, reviewer, coders): one ordinary GitHub login is enough. Persona accounts and tokens are optional. Without them the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request.
+- Persona accounts, if you want each persona to show up under its own name: a person must create them, since GitHub requires email verification and a captcha. See [docs/identity-wiring.md](docs/identity-wiring.md).
+- A budget you can watch. Each agent is its own model session, and a team runs several at once. See [docs/cost-and-safety.md](docs/cost-and-safety.md).
+- Tested on one Linux machine only. macOS, Windows, containers and remote setups are untested, and so is `/plugin install` on a clean machine. See [docs/limitations.md](docs/limitations.md).
 
 ## The team
 
@@ -85,6 +91,16 @@ When you stand up a team, each role runs either as a persistent, named agent or 
 Workaround: tell the session about the comment, and the persona reads it then. Or have the session poll the persona account's GitHub notifications on an interval, for example with `/loop` or a cron job. A poll picks up a comment up to one interval late, and it runs only while the session is open. A comment does not start work on its own. The persona reports what the comment says, and starts only when the user tells it to.
 
 A hosted route exists: the [Claude Code GitHub Action](https://github.com/anthropics/claude-code-action) responds to @claude mentions on issues and pull requests. This repo does not set it up or cover it. Automatic pickup of GitHub comments in a local session is out of scope for now.
+
+## Codex (unverified, not a supported install)
+
+Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plugin.json`, which reads skills from `./skills/`.
+
+```
+git clone https://github.com/nestedmind/inmates.git
+```
+
+Codex reads the skills only. The agents in `agents/` and the commands in `commands/` are Claude Code features, and nothing here maps them to Codex, so Codex users get the skills and run the personas by hand. The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
 
 ## More
 
