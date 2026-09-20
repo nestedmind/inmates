@@ -43,6 +43,12 @@ Workaround: tell the session about the comment, and the persona reads it then. O
 
 A hosted route exists: the [Claude Code GitHub Action](https://github.com/anthropics/claude-code-action) responds to @claude mentions on issues and pull requests. This repo does not set it up or cover it. Automatic pickup of GitHub comments in a local session is out of scope for now.
 
+## More
+
+- [docs/limitations.md](docs/limitations.md): what is untested or does not work yet.
+- [docs/cost-and-safety.md](docs/cost-and-safety.md): token cost, GitHub tokens and what agents can run.
+- [CONTRIBUTING.md](CONTRIBUTING.md): how to pick a ticket, open a pull request and add a skill or persona.
+
 ## License
 
 MIT. See `LICENSE`. Adapted skills are credited in `THIRD_PARTY.md`.
