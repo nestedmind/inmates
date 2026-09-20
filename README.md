@@ -25,15 +25,17 @@ The Codex install steps are unverified. Codex is not installed on the machine th
 
 ## Spawn commands
 
-Three personas run as long-lived agents that you message across a session. A slash command starts each one.
+Three personas run as long-lived agents that you message across a session. A slash command starts each one. Plugin commands carry the plugin name, so the forms are:
 
-- `/spawn-tbag` starts the adversarial code reviewer.
-- `/spawn-linc` starts the senior advisor.
-- `/spawn-sara` starts the teacher.
+- `/inmates:spawn-tbag` starts the adversarial code reviewer.
+- `/inmates:spawn-linc` starts the senior advisor.
+- `/inmates:spawn-sara` starts the teacher.
 
-Each command starts an agent with that persona's founding prompt and tells it to ignore the project around it. Add a project name after the command, such as `/spawn-linc my-app`, to give the agent one project for the conversation. Without a name, the agent asks.
+Each command starts an agent with that persona's founding prompt and tells it to ignore the project around it. Add a project name after the command, such as `/inmates:spawn-linc my-app`, to give the agent one project for the conversation. Without a name, the agent asks.
 
-Each command reports the agent's id when it finishes. Message the agent with `SendMessage` and that id. The agent's name does not reach it, so keep the id.
+Each command reports the agent's id when it finishes, and the agent is reachable by that id. Whether it also gets a name such as `tbag` depends on the harness. The command sets a name only when the `Agent` tool accepts one, so keep the id.
+
+To talk to the agent, ask the main session to relay: "Ask Tbag <id>: review PR 12". The main session calls `SendMessage` with the id.
 
 The coders are not spawned this way. The coordinator starts a fresh coder for each ticket.
 
