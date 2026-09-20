@@ -54,7 +54,7 @@ The plugin version lives in one place: `version` in `.claude-plugin/plugin.json`
 
 Because the version is set, users who already installed the plugin get an update only when that string changes. Bump it in any pull request that users should receive. Skip the bump for pull requests that change only docs.
 
-A check enforces this. `scripts/check-version-bump.sh` compares your branch with `origin/main`. If it changes anything under `agents/`, `skills/`, `commands/`, `.claude-plugin/` or `.codex-plugin/`, then `version` in `.claude-plugin/plugin.json` must differ from `main`, or the check fails. Changes to docs, `examples/`, `scripts/` and `.github/` need no bump. Run it locally before you push.
+A check enforces this. `scripts/check-version-bump.sh` compares your branch with `origin/main`. If it changes anything under `agents/`, `skills/`, `commands/`, `.claude-plugin/` or `.codex-plugin/`, then `version` in `.claude-plugin/plugin.json` must differ from `main`, or the check fails. Adding, editing, moving or deleting a file there all count, so moving a skill out of `skills/` needs a bump too. Changes to docs, `examples/`, `scripts/` and `.github/` need no bump. Run it locally before you push.
 
 If a change touches those folders but users need not receive it, such as a typo fix, a maintainer can add the `no-bump` label to the pull request, and the check passes. Locally, set `NO_BUMP=1`. State the reason in the pull request. The workflow in `.github/workflows/checks.yml` runs this check and `scripts/check-agents.sh` on every pull request.
 

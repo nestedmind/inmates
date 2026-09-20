@@ -18,7 +18,7 @@ mb="$(git merge-base "$base" HEAD 2>/dev/null)" || {
   exit 2
 }
 
-changed="$(git diff --name-only "$mb" HEAD | grep -E "$shipped")"
+changed="$(git diff --no-renames --name-only "$mb" HEAD | grep -E "$shipped")"
 if [ -z "$changed" ]; then
   echo "ok: no shipped files changed, no version bump needed"
   exit 0
@@ -26,7 +26,7 @@ fi
 
 version_of() { sed -n 's/^ *"version": *"\([^"]*\)".*/\1/p' | head -n 1; }
 old="$(git show "$mb:$manifest" 2>/dev/null | version_of)"
-new="$(version_of < "$manifest")"
+new="$(git show "HEAD:$manifest" 2>/dev/null | version_of)"
 
 if [ -n "$new" ] && [ "$new" != "$old" ]; then
   echo "ok: shipped files changed and version bumped ($old -> $new)"
