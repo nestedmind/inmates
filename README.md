@@ -31,6 +31,10 @@ A persona's name lives in the skill that defines it. To rename one, change the `
 
 Each persona can run under its own GitHub account, so commits, pull requests and reviews show who did what. This is optional, and everything in the repo works with your own `gh` login and git identity. The setup steps, and which ones only a person can do, are in [docs/identity-wiring.md](docs/identity-wiring.md).
 
+## Agent lifecycle
+
+When you stand up a team, each role runs either as a persistent, named agent or as a fresh dispatch per task. A standing reviewer or advisor fits the first, and a coder fits the second. The rule and the reasons are in [docs/agent-lifecycle.md](docs/agent-lifecycle.md).
+
 ## Limitations
 
 **GitHub comments and @-mentions do not reach a session running on your machine.** Commenting on a persona's name in an issue or pull request does not wake it or send the comment into the session. The session does not listen for GitHub events, so a persona reads a comment only when it checks for one.
