@@ -1,7 +1,7 @@
 {
   "name": "inmates",
   "owner": {
-    "name": "nestedmind",
+    "name": "Nestedmind Studio",
     "url": "https://github.com/nestedmind"
   },
   "metadata": {
@@ -14,7 +14,7 @@
       "version": "0.1.0",
       "source": "./",
       "author": {
-        "name": "nestedmind",
+        "name": "Nestedmind Studio",
         "url": "https://github.com/nestedmind"
       }
     }
