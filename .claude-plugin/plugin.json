@@ -3,10 +3,10 @@
   "description": "Skills for agent personas: role-based working procedures for coding agents.",
   "version": "0.1.0",
   "author": {
-    "name": "the0xLab",
-    "url": "https://github.com/the0xLab"
+    "name": "nestedmind",
+    "url": "https://github.com/nestedmind"
   },
-  "homepage": "https://github.com/the0xLab/inmates",
-  "repository": "https://github.com/the0xLab/inmates",
+  "homepage": "https://github.com/nestedmind/inmates",
+  "repository": "https://github.com/nestedmind/inmates",
   "license": "MIT"
 }

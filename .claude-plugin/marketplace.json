@@ -1,8 +1,8 @@
 {
   "name": "inmates",
   "owner": {
-    "name": "the0xLab",
-    "url": "https://github.com/the0xLab"
+    "name": "nestedmind",
+    "url": "https://github.com/nestedmind"
   },
   "metadata": {
     "description": "Skills for agent personas."
@@ -14,8 +14,8 @@
       "version": "0.1.0",
       "source": "./",
       "author": {
-        "name": "the0xLab",
-        "url": "https://github.com/the0xLab"
+        "name": "nestedmind",
+        "url": "https://github.com/nestedmind"
       }
     }
   ]

@@ -7,7 +7,7 @@ A plugin of skills for agent personas. Each skill gives a coding agent a working
 Add the marketplace, then install the plugin:
 
 ```
-/plugin marketplace add the0xLab/inmates
+/plugin marketplace add nestedmind/inmates
 /plugin install inmates@inmates
 ```
 
@@ -18,7 +18,7 @@ Claude Code finds every skill under `skills/` on its own.
 Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plugin.json`, which reads skills from `./skills/`.
 
 ```
-git clone https://github.com/the0xLab/inmates.git
+git clone https://github.com/nestedmind/inmates.git
 ```
 
 The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
