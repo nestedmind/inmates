@@ -4,7 +4,13 @@ A plugin of skills for agent personas: a team with a coordinator, a reviewer and
 
 It has been tested only with Claude Code, and it is recommended for Claude Code users. Codex users are welcome to try it and send feedback. See [Codex](#codex-untested) below.
 
-## Install
+## Get started
+
+Three steps. Steps 1 and 2 are typed inside Claude Code. Step 3 is typed in a terminal.
+
+### 1. Install
+
+Inside Claude Code:
 
 ```
 /plugin marketplace add nestedmind/inmates
@@ -13,22 +19,36 @@ It has been tested only with Claude Code, and it is recommended for Claude Code 
 
 Claude Code finds every skill under `skills/` and every command under `commands/` on its own.
 
-## Try this first
+### 2. Try it now: wake up Scofield
 
-Wake up Scofield, the coordinator, who holds the context for the team. In a project that has a git remote on GitHub and a `gh` login, start a session as Scofield:
+Scofield is the coordinator and holds the context for the team. In a project that has a git remote on GitHub and a `gh` login, type this inside Claude Code:
+
+```
+/inmates:wake-scofield
+```
+
+`commands/wake-scofield.md` tells the current session to act as Scofield, in the main session, so it can ask you questions. It follows `agents/scofield.md`: if the project has no `.inmates/config.md`, it follows the `onboarding` skill first. That skill checks your `gh` login, git repo and repo access, asks a few questions, and writes your answers to `.inmates/config.md`. If the file exists, Scofield reads it and the status file and reports where things stand. It confirms with you before it spawns any agent.
+
+This route is untested. Nobody has run `/inmates:wake-scofield` in a live session yet. It is on the owner's checklist in [docs/smoke-test.md](docs/smoke-test.md).
+
+### 3. Coming back later, or in another terminal tab or window
+
+In a terminal, start a session as Scofield:
 
 ```
 claude --agent inmates:scofield
 ```
 
-`agents/scofield.md` tells Scofield that if the project has no `.inmates/config.md`, it follows the `onboarding` skill first. That skill checks your `gh` login, git repo and repo access, asks a few questions, and writes your answers to `.inmates/config.md`. If the file exists, Scofield reads it and the status file and reports where things stand. This path has not been run on a clean machine, so treat a first run as untested. See [docs/smoke-test.md](docs/smoke-test.md).
+This needs a new terminal session. It has not been run on a clean machine either.
 
-Optional second step, if you want the plugin explained to you first: run `/inmates:spawn-sara`. It starts Sara, a teacher, as a background agent, and reports the agent's id. Sara gauges what you already know, explains in steps, and checks your understanding. Her founding prompt tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara <id>: explain how git rebase works." Add a project name after the command to give her one project for the conversation. The command file calls no `gh` command, so starting Sara needs no `gh` login. That the agent itself needs none is untested.
+### Optional: have the plugin explained first
+
+Run `/inmates:spawn-sara`. It starts Sara, a teacher, as a background agent, and reports the agent's id. Sara gauges what you already know, explains in steps, and checks your understanding. Her founding prompt tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara <id>: explain how git rebase works." Add a project name after the command to give her one project for the conversation. The command file calls no `gh` command, so starting Sara needs no `gh` login. That the agent itself needs none is untested.
 
 ## What you need
 
 - Claude Code, with the plugin installed as above.
-- For running Scofield as the main session: a `gh` login, a git repository, and access to its GitHub repo, the same as onboarding.
+- For `/inmates:wake-scofield` and `claude --agent inmates:scofield`: a `gh` login, a git repository, and access to its GitHub repo, the same as onboarding.
 - For starting the spawn commands (`/inmates:spawn-sara`, `/inmates:spawn-linc`, `/inmates:spawn-tbag`): nothing beyond the plugin. The command files call no `gh` command. A spawned Tbag reviews pull requests, so it needs a `gh` login to do that work.
 - For `/inmates:onboard`: a `gh` login, a git repository, and access to its GitHub repo. Onboarding checks all three before it writes anything.
 - For the full team on a project (coordinator, reviewer, coders): one ordinary GitHub login is enough. Persona accounts and tokens are optional. Without them the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request.
@@ -50,6 +70,7 @@ Claude Code lists a plugin's agents under the plugin name, so dispatch them as `
 
 Nothing makes Scofield the default. The plugin does not set `"agent"` in a `settings.json`, because that would change every session of everyone who installs it. To run as Scofield, pick one:
 
+- Inside a session, run `/inmates:wake-scofield`. This route is untested.
 - Start a session with `claude --agent inmates:scofield`.
 - Or add `{"agent": "inmates:scofield"}` to your project's `.claude/settings.json`, or to your user settings, to make it the default there.
 
@@ -60,6 +81,12 @@ A main-session agent does not preload the skills its file lists, so Scofield loa
 Run `/inmates:onboard` in your project. Scofield checks that `gh` is logged in, asks who you are and how you want reports, reads your `CLAUDE.md` and build files to agree the test, lint and build commands, and writes your answers to `.inmates/config.md` in the project. It adds `.inmates/` to `.gitignore`. A project board, a branch ruleset and persona accounts are offered last, and each can be skipped. One ordinary GitHub login is enough, and skipping every optional step leaves a working team. Running it again shows your current answers and asks before changing any.
 
 Without persona accounts the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request. See the fallbacks in `skills/scofield/SKILL.md`.
+
+## Commands
+
+- `/inmates:wake-scofield` makes the current session act as Scofield, the coordinator.
+- `/inmates:onboard` runs the onboarding skill only.
+- `/inmates:spawn-tbag`, `/inmates:spawn-linc` and `/inmates:spawn-sara` start a persona as an agent. See below.
 
 ## Spawn commands
 
