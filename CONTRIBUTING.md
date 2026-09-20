@@ -1,0 +1,53 @@
+# Contributing
+
+This repo is a work in progress, tested on one machine, and it has gaps. If you want to join the team and help fill them, start with [docs/limitations.md](docs/limitations.md), which lists the known ones.
+
+## Pick a ticket
+
+Open issues are the work list. Choose one that no one has taken, and comment that you want it so two people do not start the same job. If you have an idea that has no ticket, open an issue first and wait for a maintainer to agree before you build it.
+
+## Branch and pull request
+
+1. Branch from the latest `origin/main`. Name the branch for the ticket, for example `docs/20-limitations`.
+2. Keep one ticket to one pull request.
+3. Do not push to `main`.
+4. Open the pull request with a description that says what changed and why, and put `Closes #<number>` in it.
+5. Rebase before you open it if `README.md` may have changed, because several branches edit it.
+
+## Review
+
+A reviewer reads each pull request against its ticket and either approves or requests changes. Merge only after an approval on the current head commit.
+
+The repo dismisses an approval on every push, so ask for review again after each push. If the reviewer and you disagree after two rounds, stop and take the open findings to the maintainer. Do not merge past a disagreement. `skills/scofield/SKILL.md` describes the full protocol.
+
+## Plain writing
+
+Docs, skills and pull request text follow [skills/plain-writing/SKILL.md](skills/plain-writing/SKILL.md). Cut words that do no work, use the active voice, and name the thing, the number and the ticket. State only what you checked.
+
+Do not put names of people or private accounts, tokens or home directory paths in any file or pull request text.
+
+## Report a bug on an untested setup
+
+The tested setup is one Linux machine with Claude Code. If something fails on another setup, open an issue with:
+
+- your operating system and whether you ran in a virtual machine, container or remote session
+- the harness and version, Claude Code or Codex
+- the steps you took, the result you expected and the result you got
+- the error text, with any token or path that names you removed
+
+An issue that reports success on an untested setup helps as well.
+
+## Add a skill
+
+1. Create `skills/<name>/SKILL.md`. The directory name matches the `name` in the frontmatter.
+2. Write a `description` that begins with "Use when" and says when the skill applies.
+3. Follow `skills/writing-skills/SKILL.md`, and test the skill against a real task before you open the pull request.
+4. If the skill comes from another project, credit it in `THIRD_PARTY.md` and in the skill body.
+
+## Add a persona
+
+A persona is a role with a skill that defines it, and the name lives in that skill. Follow the steps for adding a skill, and describe the role and when it is used. If the role needs its own GitHub account, see [docs/identity-wiring.md](docs/identity-wiring.md). Then decide whether it runs persistent or as a fresh dispatch using [docs/agent-lifecycle.md](docs/agent-lifecycle.md). Add a row to the team table in `skills/scofield/SKILL.md` if the persona joins that team.
+
+## License
+
+By contributing you agree that your work is released under the MIT license in `LICENSE`.
