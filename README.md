@@ -1,8 +1,8 @@
 # inmates
 
-A Claude Code plugin that gives you a team of agent personas, a coordinator, a reviewer and coders, plus the skills each one works from.
+A plugin of skills for agent personas: a team with a coordinator, a reviewer and coders, and the skills each one works from. Claude Code and Codex read the same `skills/` directory, so each skill exists once.
 
-This release is for Claude Code only.
+It has been tested only with Claude Code, and it is recommended for Claude Code users. Codex users are welcome to try it and send feedback. See [Codex](#codex-untested) below.
 
 ## Install
 
@@ -15,14 +15,21 @@ Claude Code finds every skill under `skills/` and every command under `commands/
 
 ## Try this first
 
-Run `/inmates:spawn-sara`. It starts Sara, a teacher, as a background agent, and reports the agent's id. Sara gauges what you already know, explains in steps, and checks your understanding. She works from a founding prompt that tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara <id>: explain how git rebase works." Add a project name after the command to give her one project for the conversation.
+Wake up Scofield, the coordinator, who holds the context for the team. In a project that has a git remote on GitHub and a `gh` login, start a session as Scofield:
 
-The command starts one agent and does nothing else. It needs no `gh` login. That the agent itself needs none is untested.
+```
+claude --agent inmates:scofield
+```
+
+`agents/scofield.md` tells Scofield that if the project has no `.inmates/config.md`, it follows the `onboarding` skill first. That skill checks your `gh` login, git repo and repo access, asks a few questions, and writes your answers to `.inmates/config.md`. If the file exists, Scofield reads it and the status file and reports where things stand. This path has not been run on a clean machine, so treat a first run as untested. See [docs/smoke-test.md](docs/smoke-test.md).
+
+Optional second step, if you want the plugin explained to you first: run `/inmates:spawn-sara`. It starts Sara, a teacher, as a background agent, and reports the agent's id. Sara gauges what you already know, explains in steps, and checks your understanding. Her founding prompt tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara <id>: explain how git rebase works." Add a project name after the command to give her one project for the conversation. The command file calls no `gh` command, so starting Sara needs no `gh` login. That the agent itself needs none is untested.
 
 ## What you need
 
 - Claude Code, with the plugin installed as above.
-- For the spawn commands (`/inmates:spawn-sara`, `/inmates:spawn-linc`, `/inmates:spawn-tbag`): nothing beyond the plugin. The command files call no `gh` command.
+- For running Scofield as the main session: a `gh` login, a git repository, and access to its GitHub repo, the same as onboarding.
+- For starting the spawn commands (`/inmates:spawn-sara`, `/inmates:spawn-linc`, `/inmates:spawn-tbag`): nothing beyond the plugin. The command files call no `gh` command. A spawned Tbag reviews pull requests, so it needs a `gh` login to do that work.
 - For `/inmates:onboard`: a `gh` login, a git repository, and access to its GitHub repo. Onboarding checks all three before it writes anything.
 - For the full team on a project (coordinator, reviewer, coders): one ordinary GitHub login is enough. Persona accounts and tokens are optional. Without them the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request.
 - Persona accounts, if you want each persona to show up under its own name: a person must create them, since GitHub requires email verification and a captcha. See [docs/identity-wiring.md](docs/identity-wiring.md).
@@ -92,7 +99,7 @@ Workaround: tell the session about the comment, and the persona reads it then. O
 
 A hosted route exists: the [Claude Code GitHub Action](https://github.com/anthropics/claude-code-action) responds to @claude mentions on issues and pull requests. This repo does not set it up or cover it. Automatic pickup of GitHub comments in a local session is out of scope for now.
 
-## Codex (unverified, not a supported install)
+## Codex (untested)
 
 Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plugin.json`, which reads skills from `./skills/`.
 
@@ -100,7 +107,7 @@ Clone the repo and load it as a Codex plugin. Its manifest is `.codex-plugin/plu
 git clone https://github.com/nestedmind/inmates.git
 ```
 
-Codex reads the skills only. The agents in `agents/` and the commands in `commands/` are Claude Code features, and nothing here maps them to Codex, so Codex users get the skills and run the personas by hand. The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation.
+Codex reads the skills only. The agents in `agents/` and the commands in `commands/` are Claude Code features, and nothing here maps them to Codex, so Codex users get the skills and run the personas by hand. The Codex install steps are unverified. Codex is not installed on the machine that wrote this, and Codex's plugin documentation could not be checked. The manifest follows the layout of other Codex plugins, but confirm the load step against Codex's current documentation. If you try it, please tell us what worked and what did not on the [issues page](https://github.com/nestedmind/inmates/issues).
 
 ## More
 
