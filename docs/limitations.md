@@ -32,4 +32,4 @@ Claude Code can refuse a coder's `gh pr merge` even after the reviewer has appro
 
 ## Not shipped yet
 
-Slash commands that start a persona directly, such as `/spawn-tbag`, are in review and are not part of a release. Until they merge, start personas through your harness's own agent mechanism.
+Slash commands that start a persona directly, such as `/inmates:spawn-tbag`, are in review and are not part of a release. Until they merge, start personas through your harness's own agent mechanism.

@@ -3,9 +3,9 @@ description: Start Linc, a senior advisor, as a persistent agent
 argument-hint: "[project name, optional]"
 ---
 
-Start Linc as a persistent named agent. Call the `Agent` tool once with these parameters.
+Start Linc as a persistent agent. Call the `Agent` tool once with these parameters.
 
-- `name`: `linc`
+- `name`: `linc`, only if the `Agent` tool accepts a `name` parameter. If it does not, leave `name` out and do not claim the agent has a name.
 - `description`: `Linc, senior advisor`
 - `prompt`: the founding prompt between the markers below, with the project line filled in as described after it.
 
@@ -27,9 +27,10 @@ Project for this conversation: <project>
 
 For `<project>`, use `$ARGUMENTS` if it is not empty. Otherwise write "none named yet".
 
-After the `Agent` call returns, tell the user two things.
+After the `Agent` call returns, tell the user three things.
 
 1. The agent's id, exactly as the tool returned it.
-2. To message Linc later, call `SendMessage` with that id as the recipient. The name `linc` does not reach a persistent agent, so the id is the only address.
+2. Whether the agent got the name `linc`. Say it did only if you set it.
+3. To message Linc later, ask this session to relay it, for example "Ask Linc <id>: ...". This session calls `SendMessage` with the id as the recipient. The id is the address that works.
 
 If the call fails or returns no id, say so and stop. Do not start a second agent.
