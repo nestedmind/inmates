@@ -99,7 +99,9 @@ If a ruleset blocks every merge for these reasons, tell the owner and let them c
 - Merge only work that has been read and approved. Never merge unreviewed to keep throughput up.
 - A coder merges its own ticket after approval. Merge yourself only for work you reviewed as a fallback, or after an escalation you resolved.
 - Merge with `gh pr merge <n> --squash`. If the repo has a bypass actor for the ruleset and the owner has agreed to use it, add `--admin`. Without that flag `gh pr merge` refuses even when the bypass exists.
-- After a merge, move the ticket to "Done" on the board if one exists, and clean up the worktree and any per-stream infrastructure.
+- After a merge, move the ticket to "Done" on the board if one exists. A built-in project workflow may already have done it, so check first.
+- The coder cleans up after its own merge: it removes its worktree and deletes the local and remote branch. Tell each coder this in the dispatch prompt.
+- After every merge, run `git worktree list` and sweep what the coder could not remove, such as a worktree the harness locked. If a removal refuses because of uncommitted files, look at them first and never force it. Also clean up any per-stream infrastructure.
 - Assign the next unblocked ticket in that stream. Do not let a stream sit idle with work queued.
 
 ## Keeping the owner informed
