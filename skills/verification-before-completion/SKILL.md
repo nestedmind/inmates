@@ -67,4 +67,4 @@ Before any success or completion claim, any positive statement about the state o
 
 ## Related skills
 
-`receiving-code-review` applies the same habit to feedback: check a reviewer's claim against the code before you accept or dismiss it. A `copilot-pr-review` skill with a "verify before you dismiss (and before you accept)" section is not in this repo yet. When it lands, that section should become a specific case of this gate and point back here.
+`receiving-code-review` applies the same habit to feedback: check a reviewer's claim against the code before you accept or dismiss it. The "Verify before you dismiss, and before you accept" section of `copilot-pr-review` applies this gate to automated review findings and points back here.
