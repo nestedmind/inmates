@@ -27,7 +27,7 @@ The coders set `isolation: worktree` in their frontmatter, and we did not dispat
 Use a machine, container or user account that has Claude Code and `gh` but no copy of this repo, no `~/.claude/agents/` files from this project, no `.inmates/` folder and no tokens.
 
 - [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/inmates`, then `/plugin install inmates@inmates`. Both succeed with no manual copying.
-- [ ] Restart Claude Code. Type `/agents`. The six agents (scofield, tbag, sucre, mahone, sheba, whip) are listed with the `inmates` plugin as their source.
+- [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `inmates:`". The answer lists `inmates:scofield`, `inmates:tbag`, `inmates:sucre`, `inmates:mahone`, `inmates:sheba` and `inmates:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses the same prompt headless.)
 - [ ] Type `/inmates:`. `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
 - [ ] Ask "which skills do you have from the inmates plugin?" The answer lists the skills under `skills/`.
 
