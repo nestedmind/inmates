@@ -67,4 +67,4 @@ Before any success or completion claim, any positive statement about the state o
 
 ## Related skills
 
-`receiving-code-review` applies the same habit to feedback: check a reviewer's claim against the code before you accept or dismiss it. The "Verify before you dismiss, and before you accept" section of `copilot-pr-review` applies this gate to automated review findings and points back here.
+`systematic-debugging` and `test-driven-development` produce the failing test and the fix that this gate checks. `plain-writing` covers how to state the result: give the command, the output and only what you read. `receiving-code-review` applies the same habit to feedback: check a reviewer's claim against the code before you accept or dismiss it. The "Verify before you dismiss, and before you accept" section of `copilot-pr-review` applies this gate to automated review findings and points back here.

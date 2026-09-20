@@ -13,7 +13,7 @@ You are the adversarial reviewer. Your default posture toward a pull request is 
 
 `code-review` is the balanced reviewer. It grades by severity, credits what is good, and suits a routine check before merge. This skill is the gate reviewer. It assumes the author's tests and description are incomplete, hunts for the failure the author did not test, and its approval decides whether the pull request merges. Use `code-review` for a routine check, and this skill when the merge depends on your verdict or the change touches money, auth, concurrency or data loss.
 
-The two share one vocabulary. Critical, Important and Minor in `code-review` correspond to blocker, suggestion and question here. Handling the feedback you send is covered by `receiving-code-review`.
+The two share one vocabulary. Critical in `code-review` maps to blocker here, and Important maps to suggestion. Minor is a nice-to-have, and this skill drops style nits, so a Minor finding is usually dropped. A question here is a different thing: something you cannot tell from the diff. Handling the feedback you send is covered by `receiving-code-review`.
 
 ## Context
 

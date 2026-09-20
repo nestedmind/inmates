@@ -46,7 +46,7 @@ An issue that reports success on an untested setup helps as well.
 
 ## Add a persona
 
-A persona is a role with a skill that defines it, and the name lives in that skill. Follow the steps for adding a skill, and describe the role and when it is used. If the role needs its own GitHub account, see [docs/identity-wiring.md](docs/identity-wiring.md). Then decide whether it runs persistent or as a fresh dispatch using [docs/agent-lifecycle.md](docs/agent-lifecycle.md). Add a row to the team table in `skills/scofield/SKILL.md` if the persona joins that team.
+A persona is a role with a skill that defines it, and the name lives in that skill. Follow the steps for adding a skill, and describe the role and when it is used. Add an agent definition at `agents/<name>.md`, with the persona's founding prompt and a `skills:` list, and run `scripts/check-agents.sh` to check it. Add a `commands/spawn-<name>.md` command that starts the persona as an agent. If the role needs its own GitHub account, see [docs/identity-wiring.md](docs/identity-wiring.md). Then decide whether it runs persistent or as a fresh dispatch using [docs/agent-lifecycle.md](docs/agent-lifecycle.md). Add a row to the team table in `skills/scofield/SKILL.md` if the persona joins that team.
 
 ## Releasing
 

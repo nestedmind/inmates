@@ -61,7 +61,7 @@ This protocol changes two defaults from earlier versions of this skill.
 
 **Coders now merge their own tickets.** Earlier versions said coders never merge their own work and the coordinator merges everything. That is replaced. The reviewer's approval is now the gate, and a coder squash-merges its own pull request once it has that approval. This removes the coordinator as a relay for every merge.
 
-**Copilot review no longer runs by default.** It runs when the owner asks for it. See `copilot-pr-review`.
+**Copilot review no longer runs by default.** It runs when the owner asks for it. See `copilot-pr-review`. Its rounds apply only after the owner has requested Copilot.
 
 The steps:
 
@@ -74,7 +74,7 @@ The steps:
 
 The coordinator still reads every diff itself and checks claims against the code before accepting or dismissing them, whether or not the reviewer has approved. That read does not wait for an escalation.
 
-For how the reviewer works, see the reviewer skill. For whether the reviewer runs as a persistent agent or a fresh dispatch per pull request, see the agent lifecycle guidance (ticket #12). This skill does not repeat either.
+For how the reviewer works, see the `adversarial-review` skill. For whether the reviewer runs as a persistent agent or a fresh dispatch per pull request, see `docs/agent-lifecycle.md`. This skill does not repeat either.
 
 ### Fallbacks
 
@@ -101,7 +101,7 @@ If a ruleset blocks every merge for these reasons, tell the owner and let them c
 - A coder merges its own ticket after approval. Merge yourself only for work you reviewed as a fallback, or after an escalation you resolved.
 - Merge with `gh pr merge <n> --squash`. If the repo has a bypass actor for the ruleset and the owner has agreed to use it, add `--admin`. Without that flag `gh pr merge` refuses even when the bypass exists.
 - After a merge, move the ticket to "Done" on the board if one exists. A built-in project workflow may already have done it, so check first.
-- The coder cleans up after its own merge: it removes its worktree and deletes the local and remote branch. Tell each coder this in the dispatch prompt.
+- The coder cleans up after its own merge: it removes its worktree and deletes the local and remote branch, as in section 5 of `worktree-parallel-work`. Tell each coder this in the dispatch prompt.
 - After every merge, run `git worktree list` and sweep what the coder could not remove, such as a worktree the harness locked. If a removal refuses because of uncommitted files, look at them first and never force it. Also clean up any per-stream infrastructure.
 - Assign the next unblocked ticket in that stream. Do not let a stream sit idle with work queued.
 

@@ -260,3 +260,7 @@ Otherwise -> not TDD
 ```
 
 No exceptions without the permission of the person you work for.
+
+## Related skills
+
+`systematic-debugging` finds the root cause before you write the reproducing test. `verification-before-completion` covers the fresh run that backs a "done" claim. `plain-writing` covers how to report the result.
