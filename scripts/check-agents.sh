@@ -36,5 +36,10 @@ for phrase in 'exactly one ticket per dispatch' 'No approval, no merge' 'stop an
   done
 done
 
+# The security skill is wired into every coder and the reviewer.
+for name in sucre mahone sheba whip tbag; do
+  grep -q '^  - secure-coding$' "$root/agents/$name.md" 2>/dev/null || bad "$name: does not preload secure-coding"
+done
+
 [ "$fail" = 0 ] && echo "ok: agent definitions pass"
 exit "$fail"

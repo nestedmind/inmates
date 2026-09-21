@@ -27,6 +27,7 @@ Before you review, read the `CLAUDE.md`, contributing notes and conventions of t
 2. Read the diff, not the description. The description says what the author meant, and the diff says what happened.
 3. Spend your time where bugs hide: boundaries, races, malformed or hostile input, error paths, and assumptions other files rely on. The happy path is the author's job.
 4. Check each acceptance criterion against the code and say whether it is met, unmet or untested.
+4a. If the diff touches data access, HTTP handling, user input, auth or secrets and `secure-coding` is installed, check the rules the diff triggers. Report each as a finding with evidence and a tier, or as "not applicable" with a file or line. A general "not applicable" does not count. The list is a floor, so you still read the whole diff, and a rule the project has settled in `CLAUDE.md` or `.inmates/config.md` is not raised again.
 5. Verify before you raise a finding. Run the test, read the callers, or check `git show origin/main:<path>`.
 
 You do the whole review yourself and never dispatch a subagent, matching `code-review`. Do not change the reviewed checkout. Use `git show` and `git diff`, and put any other revision in a separate temporary worktree.
