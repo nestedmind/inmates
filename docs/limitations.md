@@ -42,6 +42,14 @@ The plugin loads and its agents resolve under `claude -p --plugin-dir`. Nobody h
 
 Codex reads `skills/`. It has no path here for the agents or the spawn commands.
 
+## The full team needs a git repository
+
+The project must be a git repository with at least one commit, because each coder works in its own worktree. Nobody has yet dispatched a coder in a folder that is not a repository or in a repository with no commits, so this page does not say what you would see.
+
+## Only GitHub Projects boards are tested
+
+Every board step in the plugin uses GitHub Projects. Linear through its MCP server is untested; the spike in [#72](https://github.com/nestedmind/inmates/issues/72) will test it.
+
 ## Onboarding
 
 The onboarding skill has been pressure-tested with subagents that answer for the person, and it has not been run end to end on a clean machine with a real person. The steps for that run are in [smoke-test.md](smoke-test.md), Part 3. The onboarding skill writes a project-local file the agent definitions read on their own initiative. Nothing enforces that a coder reads it, so the coordinator puts the commands in each dispatch prompt.
