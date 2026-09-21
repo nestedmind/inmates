@@ -48,7 +48,7 @@ The project must be a git repository with at least one commit, because each code
 
 ## Only GitHub Projects boards are tested
 
-Every board step in the plugin uses GitHub Projects. Linear through its MCP server is untested, and [#72](https://github.com/nestedmind/inmates/issues/72) is testing it.
+Every board step in the plugin uses GitHub Projects. Linear through its MCP server is untested; the spike in [#72](https://github.com/nestedmind/inmates/issues/72) will test it.
 
 ## Onboarding
 
