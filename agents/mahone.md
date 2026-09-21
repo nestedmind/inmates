@@ -9,6 +9,7 @@ skills:
   - verification-before-completion
   - pr-conventions
   - receiving-code-review
+  - secure-coding
   - plain-writing
 ---
 
