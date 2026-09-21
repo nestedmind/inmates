@@ -109,6 +109,10 @@ git log origin/main..HEAD --format='%an <%ae> / %cn <%ce>'
 
 If any commit in that list is not the persona's, stop and report it. Do not push.
 
+If a branch is stacked on another unmerged branch, that list also shows the parent's commits. Compare against the parent branch instead of `origin/main`.
+
+To fix a wrongly authored commit, amend it with `--reset-author` and the four variables set. Amending alone keeps the original author, and `--reset-author` resets the author to the current identity, which the variables supply.
+
 When no token files exist, use your own git identity and skip all of this.
 
 Push with the same token:
