@@ -83,14 +83,37 @@ The output must match the account you meant. If it does not, the file holds the 
 GH_TOKEN=$(cat ~/.config/inmates/gh-<persona>-token) gh repo view <org>/<repo>
 ```
 
-## 10. Set commit identity per worktree
+## 10. Commit under the persona's identity
 
-**An agent can do this.** Run it inside the worktree so your global git config stays untouched:
+**An agent can do this.** Do not run `git config user.name` or `git config user.email`, not even inside a worktree. Worktrees of one clone share a single config file, so a value set in one worktree changes the identity in every other worktree and in the main checkout.
+
+Instead, run every command that creates or rewrites a commit (`commit`, `commit --amend`, `rebase`, `cherry-pick`, `merge`, `revert`) with four environment variables set for that one command. Environment variables override config, so the result does not depend on what the config holds:
 
 ```
-git config user.name <account-login>
-git config user.email "$(GH_TOKEN=$(cat ~/.config/inmates/gh-<persona>-token) gh api user -q '.id')+<account-login>@users.noreply.github.com"
+GIT_AUTHOR_NAME=<account-login> GIT_AUTHOR_EMAIL=<id>+<account-login>@users.noreply.github.com GIT_COMMITTER_NAME=<account-login> GIT_COMMITTER_EMAIL=<id>+<account-login>@users.noreply.github.com git commit -m "<message>"
 ```
+
+Get `<id>` with `GH_TOKEN=$(cat ~/.config/inmates/gh-<persona>-token) gh api user -q '.id'`. All four variables are needed. A rebase rewrites commits under the committer identity, so setting only the author pair leaves the wrong committer on the rewritten commits.
+
+Two checks need no reminders. After each commit, this shows the persona for both author and committer:
+
+```
+git log -1 --format='%an <%ae> / %cn <%ce>'
+```
+
+Before every push, this shows only the persona:
+
+```
+git log origin/main..HEAD --format='%an <%ae> / %cn <%ce>'
+```
+
+If any commit in that list is not the persona's, stop and report it. Do not push.
+
+If a branch is stacked on another unmerged branch, that list also shows the parent's commits. Compare against the parent branch instead of `origin/main`.
+
+To fix a wrongly authored commit, amend it with `--reset-author` and the four variables set. Amending alone keeps the original author, and `--reset-author` resets the author to the current identity, which the variables supply.
+
+When no token files exist, use your own git identity and skip all of this.
 
 Push with the same token:
 
