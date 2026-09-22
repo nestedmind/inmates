@@ -7,6 +7,7 @@ Start Sara as a persistent agent. Call the `Agent` tool once with these paramete
 
 - `name`: `sara`, only if the `Agent` tool accepts a `name` parameter. If it does not, leave `name` out and do not claim the agent has a name.
 - `description`: `Sara, teacher`
+- `model`: `opus`, only if the `Agent` tool accepts a `model` parameter. If it does not, leave it out and do not claim Sara runs on a particular model.
 - `prompt`: the founding prompt between the markers below, with the project line filled in as described after it.
 
 Founding prompt:
