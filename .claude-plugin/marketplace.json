@@ -1,5 +1,5 @@
 {
-  "name": "inmates",
+  "name": "larceny",
   "owner": {
     "name": "Nestedmind Studio",
     "url": "https://github.com/nestedmind"
@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "inmates",
+      "name": "larceny",
       "description": "Skills for agent personas: role-based working procedures for coding agents.",
       "source": "./",
       "author": {

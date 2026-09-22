@@ -8,37 +8,37 @@ Run these from a clone of the repo. They passed on one Linux machine with Claude
 
 - [x] `scripts/check-agents.sh` prints `ok: agent definitions pass`. It checks that each of the six agents exists, that its name matches its file, that every skill in its `skills:` list exists under `skills/`, and that no agent file holds a home path, an account name or another persona's token path.
 - [x] `claude plugin validate .` passes.
-- [x] `claude -p --plugin-dir . "List the agent types whose name starts with inmates:"` lists `inmates:scofield`, `inmates:tbag`, `inmates:sucre`, `inmates:mahone`, `inmates:sheba` and `inmates:whip`.
+- [x] `claude -p --plugin-dir . "List the agent types whose name starts with larceny:"` lists `larceny:scofield`, `larceny:tbag`, `larceny:sucre`, `larceny:mahone`, `larceny:sheba` and `larceny:whip`.
 
 ## What was tested about the default agent and skill names
 
 Tested with a throwaway plugin that used a unique agent name, so no user-level agent could hide the result. Version 2.1.278, headless (`claude -p`), from a directory outside the repo.
 
 - A plugin `settings.json` containing `{"agent": "<name>"}` made the main thread run as that agent. It worked with the bare name.
-- `claude --agent <name>` and `claude --agent inmates:<name>` both worked. The plugin's agents also appear as dispatch types under the `inmates:` prefix.
-- `"agent": "inmates:<name>"` in a settings file passed with `--settings` worked.
-- A subagent that lists `onboarding` in `skills:` received the skill body, and so did one that lists `inmates:onboarding`. The short names in the agent files resolve.
+- `claude --agent <name>` and `claude --agent larceny:<name>` both worked. The plugin's agents also appear as dispatch types under the `larceny:` prefix.
+- `"agent": "larceny:<name>"` in a settings file passed with `--settings` worked.
+- A subagent that lists `onboarding` in `skills:` received the skill body, and so did one that lists `larceny:onboarding`. The short names in the agent files resolve.
 - A main-thread agent does not preload its `skills:` list. The skills appear in the session's skill list and load through the Skill tool, and the Skill tool accepted the short name `onboarding`. This is why `agents/scofield.md` tells Scofield to load its skills.
 
 The coders set `isolation: worktree` in their frontmatter, and we did not dispatch one to see that the plugin honours it. Part 3 checks it. We also did not test a real install through `/plugin install`, a fresh terminal session, or any interactive UI. The plugin does not ship a `settings.json`, because making Scofield the default agent for everyone who installs is opt-in. See [the README](../README.md#run-scofield-as-the-main-session).
 
 ## Part 2: the clean machine (for the owner)
 
-Use a machine, container or user account that has Claude Code and `gh` but no copy of this repo, no `~/.claude/agents/` files from this project, no `.inmates/` folder and no tokens.
+Use a machine, container or user account that has Claude Code and `gh` but no copy of this repo, no `~/.claude/agents/` files from this project, no `.larceny/` folder and no tokens.
 
-- [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/inmates`, then `/plugin install inmates@inmates`. Both succeed with no manual copying.
-- [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `inmates:`". The answer lists `inmates:scofield`, `inmates:tbag`, `inmates:sucre`, `inmates:mahone`, `inmates:sheba` and `inmates:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses a similar prompt headless.)
-- [ ] Type `/inmates:`. `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
-- [ ] Ask "which skills do you have from the inmates plugin?" The answer lists the skills under `skills/`.
+- [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/larceny`, then `/plugin install larceny@larceny`. Both succeed with no manual copying.
+- [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `larceny:`". The answer lists `larceny:scofield`, `larceny:tbag`, `larceny:sucre`, `larceny:mahone`, `larceny:sheba` and `larceny:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses a similar prompt headless.)
+- [ ] Type `/larceny:`. `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
+- [ ] Ask "which skills do you have from the larceny plugin?" The answer lists the skills under `skills/`.
 
 ## Part 3: fresh session and onboarding (for the owner)
 
-- [ ] In a small project that has a GitHub remote and a `gh` login, start a plain `claude` session and run `/inmates:wake-scofield`. The main session says it is Scofield and offers onboarding, because the project has no `.inmates/config.md`, and it can ask you questions. If it dispatches a background agent instead, note what it did.
-- [ ] In a small project that has a GitHub remote and a `gh` login, start `claude --agent inmates:scofield`. The session says it is Scofield and offers onboarding, because the project has no `.inmates/config.md`. If it does not, note what it did.
-- [ ] Add `{"agent": "inmates:scofield"}` to the project's `.claude/settings.json` and start a plain `claude`. The main thread is Scofield. Remove the line again if you do not want it.
-- [ ] Run `/inmates:onboard` with a real person answering. This is the clean-machine run that the onboarding work (#19) closed without. Check that `.inmates/config.md` and `.inmates/status.md` exist, that `.inmates/` is in `.gitignore`, that the persona-account steps can be skipped, and that a second run of the command shows the saved answers and asks before changing any.
-- [ ] Run `/inmates:spawn-tbag`. It reports an agent id. Ask the main session to relay a message to that id and check that a reply comes back.
-- [ ] Sign off one small ticket and ask Scofield to dispatch a coder. Check that the coder reads the ticket, works in a worktree, opens a pull request, messages the reviewer, and stops without merging until an approval arrives. Check that the coder finds the project's commands, though `.inmates/` is missing from its worktree.
+- [ ] In a small project that has a GitHub remote and a `gh` login, start a plain `claude` session and run `/larceny:wake-scofield`. The main session says it is Scofield and offers onboarding, because the project has no `.larceny/config.md`, and it can ask you questions. If it dispatches a background agent instead, note what it did.
+- [ ] In a small project that has a GitHub remote and a `gh` login, start `claude --agent larceny:scofield`. The session says it is Scofield and offers onboarding, because the project has no `.larceny/config.md`. If it does not, note what it did.
+- [ ] Add `{"agent": "larceny:scofield"}` to the project's `.claude/settings.json` and start a plain `claude`. The main thread is Scofield. Remove the line again if you do not want it.
+- [ ] Run `/larceny:onboard` with a real person answering. This is the clean-machine run that the onboarding work (#19) closed without. Check that `.larceny/config.md` and `.larceny/status.md` exist, that `.larceny/` is in `.gitignore`, that the persona-account steps can be skipped, and that a second run of the command shows the saved answers and asks before changing any.
+- [ ] Run `/larceny:spawn-tbag`. It reports an agent id. Ask the main session to relay a message to that id and check that a reply comes back.
+- [ ] Sign off one small ticket and ask Scofield to dispatch a coder. Check that the coder reads the ticket, works in a worktree, opens a pull request, messages the reviewer, and stops without merging until an approval arrives. Check that the coder finds the project's commands, though `.larceny/` is missing from its worktree.
 
 ## Part 4: pilot in a second project (for the owner)
 
@@ -50,11 +50,11 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 
 Run this last, on the clean machine from Part 2. The boxes are unticked because uninstall has not been run on this plugin. The commands come from the Claude Code plugin docs and are listed in [the README](../README.md#uninstall).
 
-- [ ] Run `/plugin uninstall inmates@inmates`, then press Esc to close the panel. Type `/inmates:`. None of `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` or `spawn-sara` is offered. If they still appear, run `/reload-plugins` and check again, and note that you had to.
-- [ ] Ask "List the agent types you can dispatch whose names start with `inmates:`". None of the six `inmates:` agents is listed.
-- [ ] Run `/plugin marketplace remove inmates`. Run `/plugin marketplace list`. The `inmates` marketplace is gone.
-- [ ] In each project where you ran onboarding, delete the `.inmates/` folder and the `.gitignore` line that ignores it. If you added `{"agent": "inmates:scofield"}` to `.claude/settings.json`, remove that line.
-- [ ] Delete any worktrees and branches the test coder made, and any token files under `~/.config/inmates/` you created for the test. Delete those tokens on GitHub too.
+- [ ] Run `/plugin uninstall larceny@larceny`, then press Esc to close the panel. Type `/larceny:`. None of `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` or `spawn-sara` is offered. If they still appear, run `/reload-plugins` and check again, and note that you had to.
+- [ ] Ask "List the agent types you can dispatch whose names start with `larceny:`". None of the six `larceny:` agents is listed.
+- [ ] Run `/plugin marketplace remove larceny`. Run `/plugin marketplace list`. The `larceny` marketplace is gone.
+- [ ] In each project where you ran onboarding, delete the `.larceny/` folder and the `.gitignore` line that ignores it. If you added `{"agent": "larceny:scofield"}` to `.claude/settings.json`, remove that line.
+- [ ] Delete any worktrees and branches the test coder made, and any token files under `~/.config/larceny/` you created for the test. Delete those tokens on GitHub too.
 - [ ] Delete the test user or container.
 
 ## Report the result

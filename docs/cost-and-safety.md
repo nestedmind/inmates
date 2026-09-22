@@ -24,7 +24,7 @@ An agent with a GitHub token can push branches, open and merge pull requests, co
 - Use a fine-grained personal access token per persona, limited to the one repo it works in.
 - Give the minimum permissions for the role. A reviewer needs read access to contents, and a coder needs write. [identity-wiring.md](identity-wiring.md) lists the scopes.
 - Set a short expiry, and revoke a token you no longer use.
-- Never commit a token file. The `.gitignore` here blocks `gh-*-token` names, but it only protects files inside this repo. Keep tokens in `~/.config/inmates/` with mode 600.
+- Never commit a token file. The `.gitignore` here blocks `gh-*-token` names, but it only protects files inside this repo. Keep tokens in `~/.config/larceny/` with mode 600.
 - Do not paste a token into a prompt, an issue, a pull request or a log.
 
 ### Branches and merges

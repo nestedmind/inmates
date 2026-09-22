@@ -35,16 +35,16 @@ Add project access only if the persona moves items on a GitHub project. Set the 
 Keep one file per persona at:
 
 ```
-~/.config/inmates/gh-<persona>-token
+~/.config/larceny/gh-<persona>-token
 ```
 
-Set `INMATES_CONFIG_DIR` to use a different directory. Each file holds the token and nothing else, with mode 600:
+Set `LARCENY_CONFIG_DIR` to use a different directory. Each file holds the token and nothing else, with mode 600:
 
 ```
-mkdir -p "${INMATES_CONFIG_DIR:-$HOME/.config/inmates}"
-chmod 700 "${INMATES_CONFIG_DIR:-$HOME/.config/inmates}"
-touch "${INMATES_CONFIG_DIR:-$HOME/.config/inmates}/gh-<persona>-token"
-chmod 600 "${INMATES_CONFIG_DIR:-$HOME/.config/inmates}/gh-<persona>-token"
+mkdir -p "${LARCENY_CONFIG_DIR:-$HOME/.config/larceny}"
+chmod 700 "${LARCENY_CONFIG_DIR:-$HOME/.config/larceny}"
+touch "${LARCENY_CONFIG_DIR:-$HOME/.config/larceny}/gh-<persona>-token"
+chmod 600 "${LARCENY_CONFIG_DIR:-$HOME/.config/larceny}/gh-<persona>-token"
 ```
 
 Paste the token into the file with your editor. `examples/config/` lists the expected file names, each with the `.example` suffix and empty contents. The `.gitignore` in this repo blocks `gh-*-token` and similar names, so a token file copied into a checkout stays out of commits.
@@ -70,7 +70,7 @@ A common ruleset for the default branch requires a pull request and one approvin
 **An agent can do this** once the token files exist.
 
 ```
-GH_TOKEN=$(cat ~/.config/inmates/gh-<persona>-token) gh api user -q .login
+GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh api user -q .login
 ```
 
 The output must match the account you meant. If it does not, the file holds the wrong token.
@@ -80,7 +80,7 @@ The output must match the account you meant. If it does not, the file holds the 
 **An agent can do this.**
 
 ```
-GH_TOKEN=$(cat ~/.config/inmates/gh-<persona>-token) gh repo view <org>/<repo>
+GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh repo view <org>/<repo>
 ```
 
 ## 10. Commit under the persona's identity
@@ -93,7 +93,7 @@ Instead, run every command that creates or rewrites a commit (`commit`, `commit 
 GIT_AUTHOR_NAME=<account-login> GIT_AUTHOR_EMAIL=<id>+<account-login>@users.noreply.github.com GIT_COMMITTER_NAME=<account-login> GIT_COMMITTER_EMAIL=<id>+<account-login>@users.noreply.github.com git commit -m "<message>"
 ```
 
-Get `<id>` with `GH_TOKEN=$(cat ~/.config/inmates/gh-<persona>-token) gh api user -q '.id'`. All four variables are needed. A rebase rewrites commits under the committer identity, so setting only the author pair leaves the wrong committer on the rewritten commits.
+Get `<id>` with `GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh api user -q '.id'`. All four variables are needed. A rebase rewrites commits under the committer identity, so setting only the author pair leaves the wrong committer on the rewritten commits.
 
 Two checks need no reminders. After each commit, this shows the persona for both author and committer:
 
@@ -118,7 +118,7 @@ When no token files exist, use your own git identity and skip all of this.
 Push with the same token:
 
 ```
-GH_TOKEN=$(cat ~/.config/inmates/gh-<persona>-token) git -c credential.helper= -c credential.helper='!gh auth git-credential' push -u origin <branch>
+GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) git -c credential.helper= -c credential.helper='!gh auth git-credential' push -u origin <branch>
 ```
 
 ## Troubleshooting

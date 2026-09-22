@@ -35,15 +35,15 @@ Three roles carry the rules below.
 - Tell the coder to message the reviewer when its pull request is open, and to wait for approval (see "Reviewer protocol").
 - If a tracking board exists, give the coder the exact command to move its own ticket to "In review" the moment its pull request opens, with the project number, status field ID and option ID filled in. The coder knows when its PR exists, and you would hear about it late.
 - Isolate shared infrastructure per subagent. Worktrees of one repo share defaults, and anything that binds a fixed port, container name or project name will collide. For example, Docker Compose names its project after the directory, and every worktree of a template has the same directory name, so two streams silently share containers. Give each subagent its own explicit identifier for anything shared by default.
-- Track coordination state outside your own context. A status file with one entry per stream (ticket, PR number, review round, what it waits on) survives context compaction. Update it when state changes. Keep it in the project (`.inmates/status.md`, see `onboarding`), never in per-user memory, and treat GitHub as the truth when the file disagrees.
-- Put the project's test, lint and build commands and its rules, from `.inmates/config.md` if it exists, in each dispatch prompt and review request. A fresh worktree lacks the gitignored `.inmates/` folder.
+- Track coordination state outside your own context. A status file with one entry per stream (ticket, PR number, review round, what it waits on) survives context compaction. Update it when state changes. Keep it in the project (`.larceny/status.md`, see `onboarding`), never in per-user memory, and treat GitHub as the truth when the file disagrees.
+- Put the project's test, lint and build commands and its rules, from `.larceny/config.md` if it exists, in each dispatch prompt and review request. A fresh worktree lacks the gitignored `.larceny/` folder.
 - If a ticket depends on one that has not merged, do not start it. Record the dependency and revisit when the blocker clears.
 
 ## Persona identity (optional)
 
 Each persona can work under its own GitHub account. The setup is in `docs/identity-wiring.md`. It is optional, and nothing else in this skill depends on it.
 
-When a persona has a token file (`~/.config/inmates/gh-<persona>-token`, or under `INMATES_CONFIG_DIR`):
+When a persona has a token file (`~/.config/larceny/gh-<persona>-token`, or under `LARCENY_CONFIG_DIR`):
 
 - Run `gh` and `git push` for that persona with `GH_TOKEN` set for that one command, for example `GH_TOKEN=$(cat <token-file>) gh pr view 12`.
 - Never run `git config user.name` or `git config user.email`: worktrees of one clone share one config, so it would change every other persona's identity. Run every command that creates or rewrites a commit (`commit`, `commit --amend`, `rebase`, `cherry-pick`, `merge`, `revert`) with `GIT_AUTHOR_NAME`, `GIT_AUTHOR_EMAIL`, `GIT_COMMITTER_NAME` and `GIT_COMMITTER_EMAIL` set for that one command. A rebase uses the committer identity, so all four are needed. After each commit, `git log -1 --format='%an <%ae> / %cn <%ce>'` must show the persona for both; before every push, `git log origin/main..HEAD --format='%an <%ae> / %cn <%ce>'` must show only the persona; if any commit is not the persona's, stop and report. If a branch is stacked on another unmerged branch, that list also shows the parent's commits, so compare against the parent branch instead of `origin/main`. To fix a wrongly authored commit, amend it with `--reset-author` and the four variables set, because `--reset-author` resets the author to the current identity. Details are in `docs/identity-wiring.md` section 10.

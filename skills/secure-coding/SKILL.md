@@ -13,7 +13,7 @@ Only N+1 and lazy loading are performance rules. The rest are security rules. Do
 
 ## Project rules
 
-A project records its answers once, in `CLAUDE.md` or `.inmates/config.md`, for example "auth uses bearer headers only, so CSRF is not applicable". Read them first. A recorded answer settles the rule, and nobody re-argues it on each PR.
+A project records its answers once, in `CLAUDE.md` or `.larceny/config.md`, for example "auth uses bearer headers only, so CSRF is not applicable". Read them first. A recorded answer settles the rule, and nobody re-argues it on each PR.
 
 ## Data access
 
