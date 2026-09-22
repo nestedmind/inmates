@@ -12,7 +12,7 @@ This command is named after Scofield, the shipped default, but a project can ren
 2. A file counts as a coordinator override when its body says the persona plays **the coordinator** role and tells it to follow the **`scofield`** skill (match on meaning, not exact wording — "You are Jon Snow, the coordinator, follow the `scofield` skill" and small variations all count).
 3. Zero matches: the coordinator is Scofield, unchanged. Follow `agents/scofield.md` as before.
 4. Exactly one match: that file's name is the coordinator for this project. Act as that name for the rest of this session, and fold in anything else that file adds (extra rules, tools) on top of the steps below.
-5. More than one match: tell the person about the conflicting files and ask which name to use before doing anything else.
+5. More than one match: tell the person about the conflicting files and ask which name to use before doing anything else. Once they answer, act under that name for the rest of this session, the same as step 4.
 
 Everywhere below, "the coordinator" means whichever name step 1-5 resolved to.
 
