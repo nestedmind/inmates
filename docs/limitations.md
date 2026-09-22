@@ -32,7 +32,7 @@ Claude Code can refuse a coder's `gh pr merge` even after the reviewer has appro
 
 ## Spawn commands
 
-`/inmates:spawn-tbag`, `/inmates:spawn-linc` and `/inmates:spawn-sara` start a persona as a background agent. In the Claude Code version we tested, the Agent tool has no name option, so you reach the agent by its id, not by name. Ask the main session to relay: "Ask Tbag <id>: ...". The commands set a name only when the tool accepts one.
+`/larceny:spawn-tbag`, `/larceny:spawn-linc` and `/larceny:spawn-sara` start a persona as a background agent. In the Claude Code version we tested, the Agent tool has no name option, so you reach the agent by its id, not by name. Ask the main session to relay: "Ask Tbag <id>: ...". The commands set a name only when the tool accepts one.
 
 ## Install and default agent are untested on a clean machine
 
@@ -48,7 +48,7 @@ The project must be a git repository with at least one commit, because each code
 
 ## Only GitHub Projects boards are tested
 
-Every board step in the plugin uses GitHub Projects. Linear through its MCP server is untested; the spike in [#72](https://github.com/nestedmind/inmates/issues/72) will test it.
+Every board step in the plugin uses GitHub Projects. Linear through its MCP server is untested; the spike in [#72](https://github.com/nestedmind/larceny/issues/72) will test it.
 
 ## Onboarding
 

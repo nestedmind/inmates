@@ -1,13 +1,13 @@
 {
-  "name": "inmates",
-  "version": "0.1.0",
+  "name": "larceny",
+  "version": "0.2.0",
   "description": "Skills for agent personas: role-based working procedures for coding agents.",
   "author": {
     "name": "Nestedmind Studio",
     "url": "https://github.com/nestedmind"
   },
-  "homepage": "https://github.com/nestedmind/inmates",
-  "repository": "https://github.com/nestedmind/inmates",
+  "homepage": "https://github.com/nestedmind/larceny",
+  "repository": "https://github.com/nestedmind/larceny",
   "license": "MIT",
   "skills": "./skills/"
 }

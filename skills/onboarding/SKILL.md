@@ -1,26 +1,26 @@
 ---
 name: onboarding
-description: Use when the person runs the plugin for the first time in a project, asks to set up or onboard the team, or asks to change their onboarding answers. Also use when the project has no .inmates/config.md.
+description: Use when the person runs the plugin for the first time in a project, asks to set up or onboard the team, or asks to change their onboarding answers. Also use when the project has no .larceny/config.md.
 ---
 
 # Onboarding
 
 The coordinator (Scofield in the example team) meets the person and sets the team up for one project. It needs one ordinary GitHub login. Persona accounts and tokens are an optional upgrade at the end.
 
-Everything is stored in the project, in `.inmates/`. Do not store answers in per-user memory, and do not edit the project's own `CLAUDE.md`. Reading it is enough.
+Everything is stored in the project, in `.larceny/`. Do not store answers in per-user memory, and do not edit the project's own `CLAUDE.md`. Reading it is enough.
 
 ## Files
 
-- `.inmates/config.md`: the person's answers and the project's commands (format below).
-- `.inmates/status.md`: the ledger described in `planning-and-reporting` and the status file in `scofield`. Create it empty, with the line `# Ledger: <project>`.
+- `.larceny/config.md`: the person's answers and the project's commands (format below).
+- `.larceny/status.md`: the ledger described in `planning-and-reporting` and the status file in `scofield`. Create it empty, with the line `# Ledger: <project>`.
 
 ## Run it
 
-1. **Look first.** If `.inmates/config.md` exists, this is a re-run: read it, show the person what it holds, and go to "Re-running". Otherwise continue.
+1. **Look first.** If `.larceny/config.md` exists, this is a re-run: read it, show the person what it holds, and go to "Re-running". Otherwise continue.
 2. **Check prerequisites.** Run `gh auth status`, `git rev-parse --show-toplevel` and `gh repo view`. For each failure say what is missing and the one command that fixes it (`gh auth login`, `git init`, `gh repo create` or a remote to add). Stop until the required ones pass: a `gh` login, a git repo and access to its GitHub repo. Write nothing before this passes.
 3. **Ask about the person, one question at a time.** Name to use, role (for example CTO, CEO, lead), how often they want reports, how long, and where (chat, an issue comment, a file). Offer a default for each. Do not ask more than these.
 4. **Read the project.** Read `CLAUDE.md`, the contributing notes, and the build files (`Makefile`, `package.json`, `pyproject.toml` and the like). Propose the test, lint and build commands you found and any rules that bind every ticket (branch names, commit style). Ask the person to confirm or correct. Record only what they confirm. If you cannot ask, or they do not answer, write the value with `(unconfirmed)` after it and ask again next run. If you find no command, record it as unset and say so.
-5. **Write the config.** Write `.inmates/config.md`, and create `.inmates/status.md` if it does not exist (see Files). Add `.inmates/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the folder if they want the team to share it. Say that a coder's fresh worktree will not contain the folder, so the coordinator puts the commands and rules in each dispatch and review request.
+5. **Write the config.** Write `.larceny/config.md`, and create `.larceny/status.md` if it does not exist (see Files). Add `.larceny/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the folder if they want the team to share it. Say that a coder's fresh worktree will not contain the folder, so the coordinator puts the commands and rules in each dispatch and review request.
 6. **Offer the optional steps, each skippable, one at a time.** Say plainly that skipping all of them leaves a working team.
    - A project board, so tickets show a status.
    - A branch ruleset that requires a review before merge.
@@ -33,7 +33,7 @@ Without persona accounts, the team runs under the one login. GitHub blocks appro
 ## Config format
 
 ```
-# Inmates config
+# Larceny config
 person: <name>
 role: <role>
 reports: <frequency>, <length>, <channel>
@@ -61,7 +61,7 @@ Stop and correct yourself if you catch these.
 | Thought | Reality |
 |---|---|
 | "I'll save this to memory so it carries over." | Memory is per user and per machine. The project config travels with the project. |
-| "The project's CLAUDE.md is the natural place." | It belongs to the project. Write `.inmates/` only. |
+| "The project's CLAUDE.md is the natural place." | It belongs to the project. Write `.larceny/` only. |
 | "They said they are in a hurry, so I'll assume the commands." | Ask once, and record only what they confirm. |
 | "They said the new role, so I'll just update it." | Show the old and new values and ask. |
 | "I'll skip the gh check, it is probably fine." | A missing login fails later and worse. Check first. |
