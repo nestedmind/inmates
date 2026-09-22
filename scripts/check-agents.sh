@@ -29,11 +29,16 @@ for f in "$root"/agents/*.md; do
   fi
 done
 
-# Coders must carry the same behaviour rules as each other.
+# Coders share one behaviour source: the `coder` skill. Each thin agent
+# file points at it instead of duplicating its rules.
+for name in sucre mahone sheba whip; do
+  grep -q '^  - coder$' "$root/agents/$name.md" 2>/dev/null || bad "$name: does not preload the coder skill"
+  grep -qF 'the `coder` skill' "$root/agents/$name.md" 2>/dev/null || bad "$name: body does not say to follow the coder skill"
+done
+
+# The rules coders share must actually live in that one skill.
 for phrase in 'exactly one ticket per dispatch' 'No approval, no merge' 'stop and report the block' 'git branch -D' 'main checkout'; do
-  for name in sucre mahone sheba whip; do
-    grep -q "$phrase" "$root/agents/$name.md" 2>/dev/null || bad "$name: missing rule '$phrase'"
-  done
+  grep -q "$phrase" "$root/skills/coder/SKILL.md" 2>/dev/null || bad "skills/coder/SKILL.md: missing rule '$phrase'"
 done
 
 # The security skill is wired into every coder and the reviewer.
