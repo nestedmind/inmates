@@ -19,6 +19,17 @@ for f in "$root"/agents/*.md; do
   n="$(printf '%s\n' "$fm" | sed -n 's/^name: *//p')"
   [ "$n" = "$base" ] || bad "$base: name '$n' does not match the file name"
   printf '%s\n' "$fm" | grep -q '^description: .\+' || bad "$base: no description"
+  # model: must be present and one of the harness's known model names, so a
+  # typo does not silently fall back to whatever the harness defaults to.
+  m="$(printf '%s\n' "$fm" | sed -n 's/^model: *//p')"
+  if [ -z "$m" ]; then
+    bad "$base: no model"
+  else
+    case "$m" in
+      sonnet|opus|haiku|fable) ;;
+      *) bad "$base: model '$m' is not one of sonnet, opus, haiku, fable" ;;
+    esac
+  fi
   # Every preloaded skill must exist under skills/.
   for s in $(printf '%s\n' "$fm" | sed -n 's/^  - //p'); do
     [ -f "$root/skills/$s/SKILL.md" ] || bad "$base: skill '$s' has no skills/$s/SKILL.md"
