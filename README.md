@@ -24,14 +24,14 @@ Claude Code finds every skill under `skills/` and every command under `commands/
 Scofield is the coordinator and holds the context for the team. In a project that has a git remote on GitHub and a `gh` login, type this inside Claude Code:
 
 ```
-/larceny:wake-scofield
+/larceny:wake-up
 ```
 
-`commands/wake-scofield.md` tells the current session to act as Scofield, in the main session, so it can ask you questions. It follows `agents/scofield.md`: if the project has no `.larceny/config.md`, it follows the `onboarding` skill first. That skill checks your `gh` login, git repo and repo access, asks a few questions, and writes your answers to `.larceny/config.md`. If the file exists, Scofield reads it and the status file and reports where things stand. It confirms with you before it spawns any agent.
+`commands/wake-up.md` tells the current session to act as Scofield, in the main session, so it can ask you questions. It follows `agents/scofield.md`: if the project has no `.larceny/config.md`, it follows the `onboarding` skill first. That skill checks your `gh` login, git repo and repo access, asks a few questions, and writes your answers to `.larceny/config.md`. If the file exists, Scofield reads it and the status file and reports where things stand. It confirms with you before it spawns any agent.
 
 If you have renamed your coordinator (see "Rename a persona" below), the same command resolves to that name instead of Scofield, without you needing to know or type the old name.
 
-This route is untested. Nobody has run `/larceny:wake-scofield` in a live session yet. It is on the owner's checklist in [docs/smoke-test.md](docs/smoke-test.md).
+This route is untested. Nobody has run `/larceny:wake-up` in a live session yet. It is on the owner's checklist in [docs/smoke-test.md](docs/smoke-test.md).
 
 ### 3. Coming back later, or in another terminal tab or window
 
@@ -41,7 +41,13 @@ In a terminal, start a session as Scofield:
 claude --agent larceny:scofield
 ```
 
-This needs a new terminal session. It has not been run on a clean machine either.
+Or, without naming Scofield, use the generic alias:
+
+```
+claude --agent larceny:coordinator
+```
+
+Both resolve the same way: to Scofield, or to your renamed coordinator if you have one. This needs a new terminal session. It has not been run on a clean machine either.
 
 ### Optional: have the plugin explained first
 
@@ -50,7 +56,7 @@ Run `/larceny:spawn-sara`. It starts Sara, a teacher, as a background agent, and
 ## What you need
 
 - Claude Code, with the plugin installed as above.
-- For `/larceny:wake-scofield` and `claude --agent larceny:scofield`: a `gh` login, a git repository, and access to its GitHub repo, the same as onboarding.
+- For `/larceny:wake-up` and `claude --agent larceny:scofield` (or its alias `claude --agent larceny:coordinator`): a `gh` login, a git repository, and access to its GitHub repo, the same as onboarding.
 - For starting the spawn commands (`/larceny:spawn-sara`, `/larceny:spawn-linc`, `/larceny:spawn-tbag`): nothing beyond the plugin. The command files call no `gh` command. A spawned Tbag reviews pull requests, so it needs a `gh` login to do that work.
 - For `/larceny:onboard`: a `gh` login, a git repository, and access to its GitHub repo. Onboarding checks all three before it writes anything.
 - For the full team on a project (coordinator, reviewer, coders): one ordinary GitHub login is enough, and the project must be a git repository with at least one commit, because each coder works in its own worktree. Persona accounts and tokens are optional. Without them the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request.
@@ -102,9 +108,9 @@ Uninstalling does not touch what the plugin's work left behind. Clean these up b
 
 Nothing makes Scofield the default. The plugin does not set `"agent"` in a `settings.json`, because that would change every session of everyone who installs it. To run as Scofield, pick one:
 
-- Inside a session, run `/larceny:wake-scofield`. This route is untested.
-- Start a session with `claude --agent larceny:scofield`.
-- Or add `{"agent": "larceny:scofield"}` to your project's `.claude/settings.json`, or to your user settings, to make it the default there.
+- Inside a session, run `/larceny:wake-up`. This route is untested.
+- Start a session with `claude --agent larceny:scofield`, or its alias `claude --agent larceny:coordinator`.
+- Or add `{"agent": "larceny:scofield"}` (or `{"agent": "larceny:coordinator"}`) to your project's `.claude/settings.json`, or to your user settings, to make it the default there.
 
 A main-session agent does not preload the skills its file lists, so Scofield loads them with the Skill tool when it starts. The tests behind this are in [docs/smoke-test.md](docs/smoke-test.md).
 
@@ -116,7 +122,7 @@ Without persona accounts the reviewer states its verdict in a comment, because G
 
 ## Commands
 
-- `/larceny:wake-scofield` makes the current session act as Scofield, the coordinator, or as your renamed coordinator if you have one (see "Rename a persona").
+- `/larceny:wake-up` makes the current session act as Scofield, the coordinator, or as your renamed coordinator if you have one (see "Rename a persona").
 - `/larceny:onboard` runs the onboarding skill only.
 - `/larceny:spawn-tbag`, `/larceny:spawn-linc` and `/larceny:spawn-sara` start a persona as an agent. See below.
 
@@ -146,7 +152,7 @@ A persona's name lives in the skill that defines it. To rename one, change the `
 
 For the coordinator specifically, there is a second way that does not touch any shipped file, confirmed in issue #70: add a project-level `.claude/agents/<name>.md` file whose body says something like "You are `<name>`, the coordinator. Follow the `scofield` skill." Because it lives in your project, not the plugin, it survives plugin updates the way an edit to `agents/scofield.md` would not.
 
-`/larceny:wake-scofield` looks for this file before it does anything else. It scans `.claude/agents/*.md` for one whose body names the coordinator role and points at the `scofield` skill; if it finds exactly one, it acts under that name for the session instead of Scofield. With no such file, or with the coordinator's name left at its default, nothing changes. This resolution is out of scope for the other personas (coders, reviewer, advisor, teacher) as of this writing — rename those with the frontmatter method above.
+`/larceny:wake-up` looks for this file before it does anything else. It scans `.claude/agents/*.md` for one whose body names the coordinator role and points at the `scofield` skill; if it finds exactly one, it acts under that name for the session instead of Scofield. With no such file, or with the coordinator's name left at its default, nothing changes. `agents/coordinator.md`, the generic alias for `claude --agent`, resolves the same way. This resolution is out of scope for the other personas (coders, reviewer, advisor, teacher) as of this writing — rename those with the frontmatter method above.
 
 ## Identity wiring
 

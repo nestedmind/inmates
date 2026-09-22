@@ -6,9 +6,9 @@ This page checks that installing the plugin once gives a working team. Part 1 is
 
 Run these from a clone of the repo. They passed on one Linux machine with Claude Code 2.1.278.
 
-- [x] `scripts/check-agents.sh` prints `ok: agent definitions pass`. It checks that each of the six agents exists, that its name matches its file, that every skill in its `skills:` list exists under `skills/`, and that no agent file holds a home path, an account name or another persona's token path.
+- [x] `scripts/check-agents.sh` prints `ok: agent definitions pass`. It checks that each of the six named personas exists, that its name matches its file, that every skill in its `skills:` list exists under `skills/`, and that no agent file holds a home path, an account name or another persona's token path.
 - [x] `claude plugin validate .` passes.
-- [x] `claude -p --plugin-dir . "List the agent types whose name starts with larceny:"` lists `larceny:scofield`, `larceny:tbag`, `larceny:sucre`, `larceny:mahone`, `larceny:sheba` and `larceny:whip`.
+- [x] `claude -p --plugin-dir . "List the agent types whose name starts with larceny:"` lists `larceny:scofield`, `larceny:coordinator`, `larceny:tbag`, `larceny:sucre`, `larceny:mahone`, `larceny:sheba` and `larceny:whip`.
 
 ## What was tested about the default agent and skill names
 
@@ -27,14 +27,15 @@ The coders set `isolation: worktree` in their frontmatter, and we did not dispat
 Use a machine, container or user account that has Claude Code and `gh` but no copy of this repo, no `~/.claude/agents/` files from this project, no `.larceny/` folder and no tokens.
 
 - [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/larceny`, then `/plugin install larceny@larceny`. Both succeed with no manual copying.
-- [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `larceny:`". The answer lists `larceny:scofield`, `larceny:tbag`, `larceny:sucre`, `larceny:mahone`, `larceny:sheba` and `larceny:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses a similar prompt headless.)
-- [ ] Type `/larceny:`. `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
+- [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `larceny:`". The answer lists `larceny:scofield`, `larceny:coordinator`, `larceny:tbag`, `larceny:sucre`, `larceny:mahone`, `larceny:sheba` and `larceny:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses a similar prompt headless.)
+- [ ] Type `/larceny:`. `onboard`, `wake-up`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
 - [ ] Ask "which skills do you have from the larceny plugin?" The answer lists the skills under `skills/`.
 
 ## Part 3: fresh session and onboarding (for the owner)
 
-- [ ] In a small project that has a GitHub remote and a `gh` login, start a plain `claude` session and run `/larceny:wake-scofield`. The main session says it is Scofield and offers onboarding, because the project has no `.larceny/config.md`, and it can ask you questions. If it dispatches a background agent instead, note what it did.
+- [ ] In a small project that has a GitHub remote and a `gh` login, start a plain `claude` session and run `/larceny:wake-up`. The main session says it is Scofield and offers onboarding, because the project has no `.larceny/config.md`, and it can ask you questions. If it dispatches a background agent instead, note what it did.
 - [ ] In a small project that has a GitHub remote and a `gh` login, start `claude --agent larceny:scofield`. The session says it is Scofield and offers onboarding, because the project has no `.larceny/config.md`. If it does not, note what it did.
+- [ ] Repeat the previous check with `claude --agent larceny:coordinator` instead. The session behaves the same way.
 - [ ] Add `{"agent": "larceny:scofield"}` to the project's `.claude/settings.json` and start a plain `claude`. The main thread is Scofield. Remove the line again if you do not want it.
 - [ ] Run `/larceny:onboard` with a real person answering. This is the clean-machine run that the onboarding work (#19) closed without. Check that `.larceny/config.md` and `.larceny/status.md` exist, that `.larceny/` is in `.gitignore`, that the persona-account steps can be skipped, and that a second run of the command shows the saved answers and asks before changing any.
 - [ ] Run `/larceny:spawn-tbag`. It reports an agent id. Ask the main session to relay a message to that id and check that a reply comes back.
@@ -50,8 +51,8 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 
 Run this last, on the clean machine from Part 2. The boxes are unticked because uninstall has not been run on this plugin. The commands come from the Claude Code plugin docs and are listed in [the README](../README.md#uninstall).
 
-- [ ] Run `/plugin uninstall larceny@larceny`, then press Esc to close the panel. Type `/larceny:`. None of `onboard`, `wake-scofield`, `spawn-tbag`, `spawn-linc` or `spawn-sara` is offered. If they still appear, run `/reload-plugins` and check again, and note that you had to.
-- [ ] Ask "List the agent types you can dispatch whose names start with `larceny:`". None of the six `larceny:` agents is listed.
+- [ ] Run `/plugin uninstall larceny@larceny`, then press Esc to close the panel. Type `/larceny:`. None of `onboard`, `wake-up`, `spawn-tbag`, `spawn-linc` or `spawn-sara` is offered. If they still appear, run `/reload-plugins` and check again, and note that you had to.
+- [ ] Ask "List the agent types you can dispatch whose names start with `larceny:`". None of the seven `larceny:` agents is listed.
 - [ ] Run `/plugin marketplace remove larceny`. Run `/plugin marketplace list`. The `larceny` marketplace is gone.
 - [ ] In each project where you ran onboarding, delete the `.larceny/` folder and the `.gitignore` line that ignores it. If you added `{"agent": "larceny:scofield"}` to `.claude/settings.json`, remove that line.
 - [ ] Delete any worktrees and branches the test coder made, and any token files under `~/.config/larceny/` you created for the test. Delete those tokens on GitHub too.
