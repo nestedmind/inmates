@@ -29,6 +29,8 @@ Scofield is the coordinator and holds the context for the team. In a project tha
 
 `commands/wake-scofield.md` tells the current session to act as Scofield, in the main session, so it can ask you questions. It follows `agents/scofield.md`: if the project has no `.larceny/config.md`, it follows the `onboarding` skill first. That skill checks your `gh` login, git repo and repo access, asks a few questions, and writes your answers to `.larceny/config.md`. If the file exists, Scofield reads it and the status file and reports where things stand. It confirms with you before it spawns any agent.
 
+If you have renamed your coordinator (see "Rename a persona" below), the same command resolves to that name instead of Scofield, without you needing to know or type the old name.
+
 This route is untested. Nobody has run `/larceny:wake-scofield` in a live session yet. It is on the owner's checklist in [docs/smoke-test.md](docs/smoke-test.md).
 
 ### 3. Coming back later, or in another terminal tab or window
@@ -114,7 +116,7 @@ Without persona accounts the reviewer states its verdict in a comment, because G
 
 ## Commands
 
-- `/larceny:wake-scofield` makes the current session act as Scofield, the coordinator.
+- `/larceny:wake-scofield` makes the current session act as Scofield, the coordinator, or as your renamed coordinator if you have one (see "Rename a persona").
 - `/larceny:onboard` runs the onboarding skill only.
 - `/larceny:spawn-tbag`, `/larceny:spawn-linc` and `/larceny:spawn-sara` start a persona as an agent. See below.
 
@@ -139,6 +141,12 @@ The commands live in `commands/`, which Claude Code finds on its own. They are C
 ## Rename a persona
 
 A persona's name lives in the skill that defines it. To rename one, change the `name` field in the skill's `SKILL.md` frontmatter, rename its directory under `skills/` to match, and update any text in the skill body that uses the old name.
+
+### Renaming the coordinator without editing the plugin
+
+For the coordinator specifically, there is a second way that does not touch any shipped file, confirmed in issue #70: add a project-level `.claude/agents/<name>.md` file whose body says something like "You are `<name>`, the coordinator. Follow the `scofield` skill." Because it lives in your project, not the plugin, it survives plugin updates the way an edit to `agents/scofield.md` would not.
+
+`/larceny:wake-scofield` looks for this file before it does anything else. It scans `.claude/agents/*.md` for one whose body names the coordinator role and points at the `scofield` skill; if it finds exactly one, it acts under that name for the session instead of Scofield. With no such file, or with the coordinator's name left at its default, nothing changes. This resolution is out of scope for the other personas (coders, reviewer, advisor, teacher) as of this writing — rename those with the frontmatter method above.
 
 ## Identity wiring
 
