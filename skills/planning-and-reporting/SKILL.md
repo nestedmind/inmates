@@ -7,17 +7,17 @@ description: Use when turning an idea or request into signed-off tickets, writin
 
 Adapted from `skills/brainstorming/`, `skills/writing-plans/`, `skills/executing-plans/` and `skills/subagent-driven-development/` in obra/superpowers (MIT, Jesse Vincent). See `THIRD_PARTY.md`.
 
-This skill covers the coordinator's planning and reporting work: deciding how much design a request needs, writing the plan as tickets, keeping progress in a file that survives context loss, and reporting to the owner. Dispatch, review rounds and merging stay in `scofield`. Roles (owner, coordinator, coder, reviewer) are the ones that skill defines.
+This skill covers the coordinator's planning and reporting work: deciding how much design a request needs, writing the plan as tickets, keeping progress in a file that survives context loss, and reporting to the owner. Dispatch, review rounds and merging stay in `coordinator`. Roles (owner, coordinator, coder, reviewer) are the ones that skill defines.
 
 ## Why this is one skill with a subset of upstream
 
-Upstream ships four skills that form one machine: brainstorm, write a plan of 2 to 5 minute steps with full code, then either run it inline or dispatch a fresh implementer and a task reviewer for every step, all without stopping to ask the owner. I compared it with the flow in `scofield` and kept the parts that add something.
+Upstream ships four skills that form one machine: brainstorm, write a plan of 2 to 5 minute steps with full code, then either run it inline or dispatch a fresh implementer and a task reviewer for every step, all without stopping to ask the owner. I compared it with the flow in `coordinator` and kept the parts that add something.
 
 Kept:
 
-- The three-path classification and its approval gates. `scofield` starts from tickets the owner has signed off on but says nothing about how a request becomes a ticket.
+- The three-path classification and its approval gates. `coordinator` starts from tickets the owner has signed off on but says nothing about how a request becomes a ticket.
 - Plan quality rules: right-sized tasks, no placeholders, a self-review pass.
-- The ledger with `Ruling:` lines, adapted to the status file `scofield` already asks for.
+- The ledger with `Ruling:` lines, adapted to the status file `coordinator` already asks for.
 - The final whole-branch review, with severity re-grading and Minor findings deferred to the ledger.
 - The "Rulings I made" and "Deferred minors" lists in the closing report.
 
@@ -26,9 +26,9 @@ Left out, with the reason:
 - Fresh implementer plus task reviewer per plan step. In this team a ticket is the unit of dispatch, and each ticket's pull request already gets a full review from the reviewer. A second review per step would repeat it at several times the cost.
 - Plans written as 2 to 5 minute steps with the code included. The coder reads the ticket itself and works test first under `test-driven-development`. Code pasted into a ticket goes stale, and the coder cannot check it against the codebase it lands in.
 - Inline plan execution as its own skill. A coder working one ticket is already executing inline, and `test-driven-development` and `verification-before-completion` are the per-step gates.
-- The five-round fix loop with resumed implementers and model escalation. `scofield` already has its own review-round ladder (coder and reviewer for rounds 1 and 2, coordinator for 3 to 5, then the owner).
+- The five-round fix loop with resumed implementers and model escalation. `coordinator` already has its own review-round ladder (coder and reviewer for rounds 1 and 2, coordinator for 3 to 5, then the owner).
 - Upstream's ban on parallel implementers. Here each ticket has its own worktree and branch, so independent tickets run side by side.
-- Never pausing for the owner, and deciding conflicts alone. `scofield` confirms with the owner before each new round of spawned work, and scope and architecture belong to the owner. Rulings here cover only what a ticket leaves open (see "The ledger").
+- Never pausing for the owner, and deciding conflicts alone. `coordinator` confirms with the owner before each new round of spawned work, and scope and architecture belong to the owner. Rulings here cover only what a ticket leaves open (see "The ledger").
 
 Revisit this choice if the team moves to plans of many small steps executed by one long-lived agent. Upstream's per-step review and resumable execution would then earn their cost.
 
@@ -78,7 +78,7 @@ Fix what you find, then send the plan to the owner.
 
 ## 3. The ledger
 
-Conversation memory does not survive compaction, and a coordinator that lost its place has re-dispatched work that already merged. Keep a ledger file outside your context. It can be the status file `scofield` describes, kept in a git-ignored path and never committed.
+Conversation memory does not survive compaction, and a coordinator that lost its place has re-dispatched work that already merged. Keep a ledger file outside your context. It can be the status file `coordinator` describes, kept in a git-ignored path and never committed.
 
 - Line one names the plan (`# Ledger: <plan or epic>`).
 - One line per ticket when it changes state: ticket, pull request, review round, what it waits on. A merged ticket gets `Ticket <n>: complete (PR <m>)`.
@@ -104,7 +104,7 @@ Each ticket's pull request is already reviewed. When the last ticket of a plan m
 
 ## 5. Reporting to the owner
 
-Report at merges, escalations and blockers, as `scofield` says. The closing report for a plan carries these, all drawn from the ledger:
+Report at merges, escalations and blockers, as `coordinator` says. The closing report for a plan carries these, all drawn from the ledger:
 
 - What shipped: tickets and pull request numbers.
 - Rulings I made: every `Ruling:` line in order, each with its cost if wrong. The owner reads this list to find and undo what you got wrong, so it must be complete.

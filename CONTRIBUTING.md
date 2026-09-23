@@ -18,7 +18,7 @@ Open issues are the work list. Choose one that no one has taken, and comment tha
 
 A reviewer reads each pull request against its ticket and either approves or requests changes. Merge only after an approval on the current head commit.
 
-The repo dismisses an approval on every push, so ask for review again after each push. If the reviewer and you disagree after two rounds, stop and take the open findings to the maintainer. Do not merge past a disagreement. `skills/scofield/SKILL.md` describes the full protocol.
+The repo dismisses an approval on every push, so ask for review again after each push. If the reviewer and you disagree after two rounds, stop and take the open findings to the maintainer. Do not merge past a disagreement. `skills/coordinator/SKILL.md` describes the full protocol.
 
 ## Plain writing
 
@@ -46,7 +46,7 @@ An issue that reports success on an untested setup helps as well.
 
 ## Add a persona
 
-A persona is a role with a skill that defines it, and the name lives in that skill. Follow the steps for adding a skill, and describe the role and when it is used. Add an agent definition at `agents/<name>.md`, with the persona's founding prompt and a `skills:` list, and run `scripts/check-agents.sh` to check it. Add a `commands/spawn-<name>.md` command that starts the persona as an agent. If the role needs its own GitHub account, see [docs/identity-wiring.md](docs/identity-wiring.md). Then decide whether it runs persistent or as a fresh dispatch using [docs/agent-lifecycle.md](docs/agent-lifecycle.md). Add a row to the team table in `skills/scofield/SKILL.md` if the persona joins that team.
+A persona is a role with a skill that defines it, and the name lives in that skill. Follow the steps for adding a skill, and describe the role and when it is used. Add an agent definition at `agents/<name>.md`, with the persona's founding prompt and a `skills:` list, and run `scripts/check-agents.sh` to check it. Add a `commands/spawn-<role>.md` command, named after the role rather than the shipped persona's name (see `commands/spawn-reviewer.md` for the pattern, added in #105), that starts the persona as an agent. If the role needs its own GitHub account, see [docs/identity-wiring.md](docs/identity-wiring.md). Then decide whether it runs persistent or as a fresh dispatch using [docs/agent-lifecycle.md](docs/agent-lifecycle.md). Add a row to the team table in `skills/coordinator/SKILL.md` if the persona joins that team.
 
 ## Releasing
 

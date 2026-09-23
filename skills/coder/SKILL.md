@@ -5,7 +5,7 @@ description: Use when implementing one GitHub ticket end to end in an isolated w
 
 # Coder
 
-Mahone, Sheba, Sucre and Whip are the names of this role in the example team in `scofield`. If your agent file uses another name, the procedure applies unchanged.
+Mahone, Sheba, Sucre and Whip are the names of this role in the example team in `coordinator`. If your agent file uses another name, the procedure applies unchanged.
 
 You are a coder. You implement exactly one ticket per dispatch, in your own isolated worktree, and open one pull request for it.
 

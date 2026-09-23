@@ -12,7 +12,7 @@ Everything is stored in the project, in `.larceny/`. Do not store answers in per
 ## Files
 
 - `.larceny/config.md`: the person's answers and the project's commands (format below).
-- `.larceny/status.md`: the ledger described in `planning-and-reporting` and the status file in `scofield`. Create it empty, with the line `# Ledger: <project>`.
+- `.larceny/status.md`: the ledger described in `planning-and-reporting` and the status file in `coordinator`. Create it empty, with the line `# Ledger: <project>`.
 
 ## Run it
 
@@ -22,7 +22,7 @@ Everything is stored in the project, in `.larceny/`. Do not store answers in per
 4. **Ask about the person, one question at a time.** Name to use, role (for example CTO, CEO, lead), how often they want reports, how long, and where (chat, an issue comment, a file). Offer a default for each. Do not ask more than these.
 5. **Ask about the roster, one yes/no question.** "Want to name your own crew (coordinator and coders), or keep the default cast (Scofield, Sheba, Mahone, Sucre, Whip)?" Default answer is keep-as-is.
    - **No** (or no answer): record `coders: default` and ask nothing further about names. This is the common case, and it stays a single question.
-   - **Yes**: name each role in turn, coordinator first, then each coder. For the coordinator, write the project-level override file described in README's "Rename a persona" (`.claude/agents/<name>.md`, "You are `<name>`, the coordinator. Follow the `scofield` skill.") — the #70/#78 mechanism, unchanged by this step. For each renamed coder, write a thin project-level wrapper file `.claude/agents/<name>.md`: frontmatter with `name: <name>`, `isolation: worktree` (every shipped coder carries this; without it a dispatch runs against the coordinator's own checkout instead of an isolated worktree) and `skills: [coder, ...]` (mirror the skill list of the shipped coder it replaces), and a body reading "You are `<name>`, a coder. Follow the `coder` skill." plus the token file path if the project uses persona accounts. Record the chosen names, in dispatch order, as `coders:` in `.larceny/config.md`.
+   - **Yes**: name each role in turn, coordinator first, then each coder. For the coordinator, write the project-level override file described in README's "Rename a persona" (`.claude/agents/<name>.md`, "You are `<name>`, the coordinator. Follow the `coordinator` skill.") — the #70/#78 mechanism, unchanged by this step except for the skill's new name. For each renamed coder, write a thin project-level wrapper file `.claude/agents/<name>.md`: frontmatter with `name: <name>`, `isolation: worktree` (every shipped coder carries this; without it a dispatch runs against the coordinator's own checkout instead of an isolated worktree) and `skills: [coder, ...]` (mirror the skill list of the shipped coder it replaces), and a body reading "You are `<name>`, a coder. Follow the `coder` skill." plus the token file path if the project uses persona accounts. Record the chosen names, in dispatch order, as `coders:` in `.larceny/config.md`.
    - Before writing a chosen name, check it against the shipped default names and their `larceny:` forms (`larceny:sheba`, `larceny:mahone`, `larceny:sucre`, `larceny:whip`, `larceny:scofield`, `larceny:tbag`). If the chosen bare name matches or nearly matches one of those (for example choosing `sheba`, or a name that differs only by the `larceny:` prefix), warn the person once that a human picking an agent by name in the Agent-tool UI could still pick the shipped default by mistake, and point at README's "Rename a persona" section for the full explanation. This is a warning, not a block — record whatever name they confirm.
    - This gate does not hide the shipped default agents. They stay listed and dispatchable in the raw Agent-tool listing no matter what is chosen here (confirmed by #82) — only the coordinator's own dispatch calls, which read `coders:` from config, are guaranteed to use the replacement.
 6. **Show the model table, one yes/no/customize question.** Show the recommended split:
@@ -36,21 +36,26 @@ Everything is stored in the project, in `.larceny/`. Do not store answers in per
    | Linc | Senior advisor | Fable |
 
    Say plainly why it matters: model choice drives cost, and the split above is a recommendation the shipped agents already carry, not a requirement. Ask: keep the recommended split, run every persona on the harness default model, or customize one or more personas.
-   - **Keep the recommended split** (or no answer): record `models: default`. The shipped `agents/*.md` frontmatter and each persona's `commands/spawn-<persona>.md` already carry these models, so nothing further is needed.
+   - **Keep the recommended split** (or no answer): record `models: default`. The shipped `agents/*.md` frontmatter and each persona's role-based spawn command already carry these models, so nothing further is needed.
    - **Harness default for everything**: record `models: harness-default`.
    - **Customize**: ask which persona(s) to override and with which model, one at a time, offering the harness's known model names. Record each as `<persona>: <model>` on its own indented line under `models:` in config. A persona not listed keeps the shipped default.
    - This is independent of the roster question in step 5: renaming a persona and picking its model are separate choices, and this step's answer is recorded under a separate `models:` key, never inside `coders:`. Use the roster's chosen names (if any) as the persona names here, not the shipped defaults they replaced.
-   - This covers every persona, not only coders dispatched by the coordinator: Sara, Linc and Tbag are started from their own `commands/spawn-<persona>.md` files, and both a ticket dispatch and that spawn path read `models:` the same way — see "Model overrides" in `docs/agent-lifecycle.md`.
-7. **Read the project.** Read `CLAUDE.md`, the contributing notes, and the build files (`Makefile`, `package.json`, `pyproject.toml` and the like). Propose the test, lint and build commands you found and any rules that bind every ticket (branch names, commit style). Ask the person to confirm or correct. Record only what they confirm. If you cannot ask, or they do not answer, write the value with `(unconfirmed)` after it and ask again next run. If you find no command, record it as unset and say so.
-8. **Write the config.** Write `.larceny/config.md`, and create `.larceny/status.md` if it does not exist (see Files). Add `.larceny/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the folder if they want the team to share it. Say that a coder's fresh worktree will not contain the folder, so the coordinator puts the commands and rules in each dispatch and review request.
-9. **Offer the optional steps, each skippable, one at a time.** Say plainly that skipping all of them leaves a working team.
-   - A project board, so tickets show a status.
-   - A branch ruleset that requires a review before merge.
-   - Persona accounts, using `docs/identity-wiring.md`. A person does the account steps there, so link it and move on.
-   Record each answer as `done`, `skipped` or `later`.
-10. **Report.** Say in a few lines what was written and where, which optional steps were skipped, and the next step: sign off a ticket and dispatch a coder.
+   - This covers every persona, not only coders dispatched by the coordinator: Sara, Linc and Tbag are started from their own role-based spawn commands, and both a ticket dispatch and that spawn path read `models:` the same way — see "Model overrides" in `docs/agent-lifecycle.md`.
+7. **Ask about Tbag, Linc and Sara, one yes/no question.** "Want to rename the reviewer, advisor or teacher persona, or keep the default cast (Tbag, Linc, Sara)?" Default answer is keep-as-is. This is independent of the roster question in step 5 and the model question in step 6: it can be skipped even when the roster or model split was customized, and vice versa.
+   - **No** (or no answer): record nothing (`reviewer:`, `advisor:` and `teacher:` are left unset, which behaves exactly like `default`). This is the common case, and it stays a single question.
+   - **Yes**: ask which of the three to rename (one, two or all three), then the new name for each. For each renamed persona, write a project-level `.claude/agents/<name>.md` file: frontmatter with `name: <name>`, and a body that copies that persona's shipped founding prompt from `commands/spawn-reviewer.md`, `commands/spawn-advisor.md` or `commands/spawn-teacher.md` with every mention of the shipped name (Tbag, Linc or Sara) replaced by `<name>`. Record the chosen name in `.larceny/config.md` as `reviewer: <name>` (for a renamed Tbag), `advisor: <name>` (for a renamed Linc) or `teacher: <name>` (for a renamed Sara). Leave the other two roles unset if only one or two are renamed.
+   - Run the same collision check as step 5's roster question, against the same shipped names and their `larceny:` forms, before recording a chosen name.
+   - Each role's spawn command (`/larceny:spawn-reviewer`, `/larceny:spawn-advisor`, `/larceny:spawn-teacher`) reads the matching config key at spawn time and uses the override automatically; nothing else needs to change for the rename to take effect.
+8. **Read the project.** Read `CLAUDE.md`, the contributing notes, and the build files (`Makefile`, `package.json`, `pyproject.toml` and the like). Propose the test, lint and build commands you found and any rules that bind every ticket (branch names, commit style). Ask the person to confirm or correct. Record only what they confirm. If you cannot ask, or they do not answer, write the value with `(unconfirmed)` after it and ask again next run. If you find no command, record it as unset and say so.
+9. **Write the config.** Write `.larceny/config.md`, and create `.larceny/status.md` if it does not exist (see Files). Add `.larceny/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the folder if they want the team to share it. Say that a coder's fresh worktree will not contain the folder, so the coordinator puts the commands and rules in each dispatch and review request.
+10. **Offer the optional steps, each skippable, one at a time.** Say plainly that skipping all of them leaves a working team.
+    - A project board, so tickets show a status.
+    - A branch ruleset that requires a review before merge.
+    - Persona accounts, using `docs/identity-wiring.md`. A person does the account steps there, so link it and move on.
+    Record each answer as `done`, `skipped` or `later`.
+11. **Report.** Say in a few lines what was written and where, which optional steps were skipped, and the next step: sign off a ticket and dispatch a coder.
 
-Without persona accounts, the team runs under the one login. GitHub blocks approving your own pull request, so the reviewer states its verdict in a comment starting APPROVED or CHANGES REQUESTED, as the fallbacks in `scofield` describe. Say this once during the optional steps.
+Without persona accounts, the team runs under the one login. GitHub blocks approving your own pull request, so the reviewer states its verdict in a comment starting APPROVED or CHANGES REQUESTED, as the fallbacks in `coordinator` describe. Say this once during the optional steps.
 
 ## Config format
 
@@ -62,6 +67,9 @@ reports: <frequency>, <length>, <channel>
 coders: default | <coordinator name>, <coder name>, <coder name>, ...
 models: default | harness-default
   <persona name>: <model>
+reviewer: default | <name>
+advisor: default | <name>
+teacher: default | <name>
 test: <command or unset>
 lint: <command or unset>
 build: <command or unset>
@@ -71,9 +79,11 @@ ruleset: done | skipped | later
 identities: done | skipped | later
 ```
 
-`coders: default` means the shipped cast (Scofield, Sheba, Mahone, Sucre, Whip). A customized roster lists the coordinator's name first, then each coder's name, in the order the `scofield` skill should dispatch them — not the shipped names they replace.
+`coders: default` means the shipped cast (Scofield, Sheba, Mahone, Sucre, Whip). A customized roster lists the coordinator's name first, then each coder's name, in the order the `coordinator` skill should dispatch them — not the shipped names they replace.
 
-`models: default` means the recommended split already baked into the shipped `agents/*.md` frontmatter and each persona's own `commands/spawn-<persona>.md` (coders on Sonnet, coordinator and reviewer on Opus, Sara on Opus, Linc on Fable) — record nothing further. `models: harness-default` means every persona runs on whatever model the harness defaults to when none is specified; no explicit `model` is passed at spawn time for any persona, coder or otherwise. A customized choice keeps the `default` (or `harness-default`) line as the baseline and adds one indented `<persona name>: <model>` line per overridden persona; every spawn path — a coder dispatch, a persistent persona's own spawn command, and the auto-spawn path in `docs/agent-lifecycle.md` — reads these and passes that persona's `model` as an explicit override at spawn time, taking precedence over the shipped default. A persona with no override line keeps the baseline for that mode. See "Model overrides" in `docs/agent-lifecycle.md` for the full mechanism.
+`models: default` means the recommended split already baked into the shipped `agents/*.md` frontmatter and each persona's own role-based spawn command (coders on Sonnet, coordinator and reviewer on Opus, Sara on Opus, Linc on Fable) — record nothing further. `models: harness-default` means every persona runs on whatever model the harness defaults to when none is specified; no explicit `model` is passed at spawn time for any persona, coder or otherwise. A customized choice keeps the `default` (or `harness-default`) line as the baseline and adds one indented `<persona name>: <model>` line per overridden persona; every spawn path — a coder dispatch, a persistent persona's own spawn command, and the auto-spawn path in `docs/agent-lifecycle.md` — reads these and passes that persona's `model` as an explicit override at spawn time, taking precedence over the shipped default. A persona with no override line keeps the baseline for that mode. See "Model overrides" in `docs/agent-lifecycle.md` for the full mechanism.
+
+`reviewer:`, `advisor:` and `teacher:` each default to `default` (or the key missing), meaning the shipped persona (Tbag, Linc, Sara). A renamed persona's own name goes here instead — not the shipped name it replaces — and its founding prompt lives in a project-level `.claude/agents/<name>.md` file (see "Renaming Tbag, Linc or Sara without editing the plugin" in the README). These three keys are independent of `coders:` and of each other: renaming the reviewer does not require renaming the advisor or teacher, and picking a custom name here is independent of the `models:` choice for that same persona.
 
 ## Re-running
 
@@ -97,3 +107,4 @@ Stop and correct yourself if you catch these.
 | "Personas need accounts and tokens." | They do not. Never make them a requirement. |
 | "They didn't answer the roster question, so I'll ask again to be sure." | No answer means keep-as-is. Record `coders: default` and move on; do not turn one question into a naming interview. |
 | "A custom coder name hides the shipped default." | It does not, and never will while the plugin is installed (#82). Only the coordinator's own dispatch is guaranteed to use the replacement. |
+| "The roster question in step 5 already covers Tbag, Linc and Sara." | It does not. That question renames the coordinator and coders only. Renaming the reviewer, advisor or teacher is a separate question, step 7. |
