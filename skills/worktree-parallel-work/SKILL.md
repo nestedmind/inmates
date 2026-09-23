@@ -35,14 +35,14 @@ Session-start checklist, in this order, before you touch a file:
 git fetch origin
 git worktree list
 git worktree prune
-git worktree add ../<repo>-<branch-slug> -b <type>/<issue>-<slug> origin/main
+git worktree add ../<repo>-wt/<branch-slug> -b <type>/<issue>-<slug> origin/main
 ```
 
 1. Fetch, so the branch starts from current work.
 2. List, to see worktrees left by earlier sessions.
 3. Prune, to drop entries whose directories are gone.
 4. Start from an issue. Name the branch for it (`feat/12-login-retry`).
-5. Add the worktree, outside the main checkout.
+5. Add the worktree, outside the main checkout, under one `<repo>-wt/` container next to it — not as its own loose sibling — so several worktrees don't clutter the parent directory.
 
 Rules:
 
@@ -96,7 +96,7 @@ After the pull request merges, and only then, you may leave the worktree for the
 
 ```bash
 cd <main checkout>
-git worktree remove ../<repo>-<branch-slug>
+git worktree remove ../<repo>-wt/<branch-slug>
 git worktree list
 ```
 
