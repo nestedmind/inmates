@@ -53,7 +53,7 @@ expect "crew: project ignores global" advisor $'default'
 
 # Every read path points at the one rule.
 for f in commands/spawn-reviewer.md commands/spawn-advisor.md commands/spawn-teacher.md commands/wake-up.md \
-         agents/coordinator.md agents/scofield.md skills/coordinator/SKILL.md docs/agent-lifecycle.md skills/onboarding/SKILL.md; do
+         agents/coordinator.md agents/teacher.md agents/advisor.md agents/scofield.md skills/coordinator/SKILL.md docs/agent-lifecycle.md skills/onboarding/SKILL.md; do
   grep -q 'crew-resolution.md' "$root/$f" || bad "$f does not point at docs/crew-resolution.md"
 done
 [ "$fail" = 0 ] && echo "ok: crew resolution passes"

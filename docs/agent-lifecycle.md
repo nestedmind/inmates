@@ -93,3 +93,9 @@ A session does not need a separate, explicit spawn step before it can relay to a
 Say once that this happened, for example "Sara wasn't running, so I started her first," rather than silently absorbing the step. If the spawn call fails, report the failure and do not drop the message.
 
 This applies to any session asked to relay a message, not only the coordinator.
+
+## Bringing personas into one conversation
+
+The coordinator, teacher and advisor can each be the main session (`claude --agent larceny:coordinator`, `larceny:teacher`, `larceny:advisor`; the last two are `agents/teacher.md` and `agents/advisor.md`, which resolve the persona by [crew-resolution.md](crew-resolution.md), project `.claude/agents/` first and then `~/.claude/agents/`). In any of them, the owner can name another of the three and it joins the same conversation, using the plain-name addressing and auto-spawn described above. The `bring-in-personas` skill is the single place that says how: the persona's reply is shown verbatim under its name, the main session's own view is kept separate, several named at once each show a reply, and the persona gets the owner's message plus a short neutral note of the conversation so far unless the owner says to leave it out.
+
+Single-channel setups: on Discord one session owns the channel, so it stays the router and relays. It follows the same verbatim, labeled and context rules. A truly separate channel per persona is not something this plugin controls.

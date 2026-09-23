@@ -155,6 +155,20 @@ Each command gives the agent a name, such as `tbag`, and the agent is reachable 
 
 To talk to the agent, ask the main session to relay: "Ask Tbag: review PR 12" (using whichever name the agent actually resolved to). The main session calls `SendMessage` with the name. If the persona is not running yet, the session starts it first, using the same founding prompt as its role's spawn command, then delivers the message. See "Addressing a persona" and "Auto-spawn on first mention" in [docs/agent-lifecycle.md](docs/agent-lifecycle.md).
 
+### Talking to the teacher and advisor directly
+
+You can also start a session as the teacher or the advisor, with no coordinator in between:
+
+- `claude --agent larceny:teacher` (Sara by default)
+- `claude --agent larceny:advisor` (Linc by default)
+- `claude --agent larceny:coordinator` (Scofield by default)
+
+Each resolves to your customized persona or the shipped default, by [docs/crew-resolution.md](docs/crew-resolution.md), and keeps the founding prompt's context rules (no project until you name one, nothing read in a repository until told).
+
+From any of the three, name another to bring it into the same conversation: "ask the advisor", "Sara, what do you think?", "all three of you". The persona is started if it is not running. Its reply is shown to you verbatim and labeled with its name, and the session you are in may add its own view separately. By default the persona also gets a short neutral note of the conversation so far; say "without the background" to leave it out. The rule lives in one place, the `bring-in-personas` skill.
+
+Limit: on Discord or any single-channel setup, one session owns the channel and relays to the others, so your messages still pass through it. It follows the same verbatim-and-labeled rule. A separate channel per persona is not something this plugin controls.
+
 The coders are not spawned this way. The coordinator starts a fresh coder for each ticket.
 
 The commands live in `commands/`, which Claude Code finds on its own. They are Claude Code only for now. Whether Codex has an equivalent custom-command mechanism is unverified, so Codex users start these personas by hand.
