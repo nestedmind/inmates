@@ -4,6 +4,8 @@ A plugin of skills for agent personas: a team with a coordinator, a reviewer and
 
 It has been tested only with Claude Code, and it is recommended for Claude Code users. Codex users are welcome to try it and send feedback. See [Codex](#codex-untested) below.
 
+**The coordinator and every persona are AI agents. They make mistakes** — a wrong claim stated with confidence, a review that misses something real, an action taken on bad information. Review their work yourself, verify a claim against the actual code or GitHub state rather than a self-report, and check before anything irreversible: a merge, a tag, a release, a delete.
+
 ## Get started
 
 Three steps. Steps 1 and 2 are typed inside Claude Code. Step 3 is typed in a terminal.
