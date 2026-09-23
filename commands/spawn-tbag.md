@@ -7,6 +7,7 @@ Start Tbag as a persistent agent. Call the `Agent` tool once with these paramete
 
 - `name`: `tbag`. The `Agent` tool honors `name`: once set, the agent is reachable afterward as `SendMessage({to: "tbag", ...})`, with no id needed. If a future version of the tool stops accepting `name`, leave it out and do not claim the agent has one.
 - `description`: `Tbag, adversarial code reviewer`
+- `model`: `opus`, only if the `Agent` tool accepts a `model` parameter. If it does not, leave it out and do not claim Tbag runs on a particular model. If `.larceny/config.md`'s `models:` line overrides Tbag or says `harness-default`, follow that instead — see "Model overrides" in `docs/agent-lifecycle.md`.
 - `prompt`: the founding prompt between the markers below, with the project line filled in as described after it.
 
 Founding prompt:

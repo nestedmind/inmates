@@ -36,10 +36,11 @@ Everything is stored in the project, in `.larceny/`. Do not store answers in per
    | Linc | Senior advisor | Fable |
 
    Say plainly why it matters: model choice drives cost, and the split above is a recommendation the shipped agents already carry, not a requirement. Ask: keep the recommended split, run every persona on the harness default model, or customize one or more personas.
-   - **Keep the recommended split** (or no answer): record `models: default`. The shipped `agents/*.md` frontmatter and `commands/spawn-sara.md`/`spawn-linc.md` already carry these models, so nothing further is needed.
+   - **Keep the recommended split** (or no answer): record `models: default`. The shipped `agents/*.md` frontmatter and each persona's `commands/spawn-<persona>.md` already carry these models, so nothing further is needed.
    - **Harness default for everything**: record `models: harness-default`.
    - **Customize**: ask which persona(s) to override and with which model, one at a time, offering the harness's known model names. Record each as `<persona>: <model>` on its own indented line under `models:` in config. A persona not listed keeps the shipped default.
    - This is independent of the roster question in step 5: renaming a persona and picking its model are separate choices, and this step's answer is recorded under a separate `models:` key, never inside `coders:`. Use the roster's chosen names (if any) as the persona names here, not the shipped defaults they replaced.
+   - This covers every persona, not only coders dispatched by the coordinator: Sara, Linc and Tbag are started from their own `commands/spawn-<persona>.md` files, and both a ticket dispatch and that spawn path read `models:` the same way — see "Model overrides" in `docs/agent-lifecycle.md`.
 7. **Read the project.** Read `CLAUDE.md`, the contributing notes, and the build files (`Makefile`, `package.json`, `pyproject.toml` and the like). Propose the test, lint and build commands you found and any rules that bind every ticket (branch names, commit style). Ask the person to confirm or correct. Record only what they confirm. If you cannot ask, or they do not answer, write the value with `(unconfirmed)` after it and ask again next run. If you find no command, record it as unset and say so.
 8. **Write the config.** Write `.larceny/config.md`, and create `.larceny/status.md` if it does not exist (see Files). Add `.larceny/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the folder if they want the team to share it. Say that a coder's fresh worktree will not contain the folder, so the coordinator puts the commands and rules in each dispatch and review request.
 9. **Offer the optional steps, each skippable, one at a time.** Say plainly that skipping all of them leaves a working team.
@@ -59,7 +60,7 @@ person: <name>
 role: <role>
 reports: <frequency>, <length>, <channel>
 coders: default | <coordinator name>, <coder name>, <coder name>, ...
-models: default | harness-default | default plus overrides below
+models: default | harness-default
   <persona name>: <model>
 test: <command or unset>
 lint: <command or unset>
@@ -72,7 +73,7 @@ identities: done | skipped | later
 
 `coders: default` means the shipped cast (Scofield, Sheba, Mahone, Sucre, Whip). A customized roster lists the coordinator's name first, then each coder's name, in the order the `scofield` skill should dispatch them — not the shipped names they replace.
 
-`models: default` means the recommended split already baked into the shipped `agents/*.md` frontmatter and `commands/spawn-sara.md`/`spawn-linc.md` (coders on Sonnet, coordinator and reviewer on Opus, Sara on Opus, Linc on Fable) — record nothing further. `models: harness-default` means every persona runs on whatever model the harness defaults to when none is specified; the coordinator then passes no explicit `model` override at spawn time for any persona. A customized choice keeps the `default` (or `harness-default`) line as the baseline and adds one indented `<persona name>: <model>` line per overridden persona; the coordinator's dispatch reads these and passes that persona's `model` as an explicit override at spawn time, taking precedence over the shipped frontmatter default. A persona with no override line keeps the baseline for that mode.
+`models: default` means the recommended split already baked into the shipped `agents/*.md` frontmatter and each persona's own `commands/spawn-<persona>.md` (coders on Sonnet, coordinator and reviewer on Opus, Sara on Opus, Linc on Fable) — record nothing further. `models: harness-default` means every persona runs on whatever model the harness defaults to when none is specified; no explicit `model` is passed at spawn time for any persona, coder or otherwise. A customized choice keeps the `default` (or `harness-default`) line as the baseline and adds one indented `<persona name>: <model>` line per overridden persona; every spawn path — a coder dispatch, a persistent persona's own spawn command, and the auto-spawn path in `docs/agent-lifecycle.md` — reads these and passes that persona's `model` as an explicit override at spawn time, taking precedence over the shipped default. A persona with no override line keeps the baseline for that mode. See "Model overrides" in `docs/agent-lifecycle.md` for the full mechanism.
 
 ## Re-running
 
