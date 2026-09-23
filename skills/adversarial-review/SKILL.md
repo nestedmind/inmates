@@ -30,7 +30,7 @@ GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh pr review <n> --approve 
 GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh api repos/<owner>/<repo>/pulls/<n>/reviews --input /tmp/review.json
 ```
 
-With no token file, use the ambient `gh` login instead, and post a comment that begins with `APPROVED` or `CHANGES REQUESTED` rather than a formal review action, as the Verdict section below describes. Never print, log or commit a token.
+With no token file, use the ambient `gh` login instead, and post a comment that begins with `APPROVED` or `CHANGES REQUESTED` rather than a formal review action, as the "Working inside the review protocol" section below describes. Never print, log or commit a token.
 
 ## Process
 
