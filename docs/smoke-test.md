@@ -28,7 +28,7 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 
 - [ ] Add the marketplace and install: `/plugin marketplace add nestedmind/larceny`, then `/plugin install larceny@larceny`. Both succeed with no manual copying.
 - [ ] Restart Claude Code and ask: "List the agent types you can dispatch whose names start with `larceny:`". The answer lists `larceny:scofield`, `larceny:coordinator`, `larceny:tbag`, `larceny:sucre`, `larceny:mahone`, `larceny:sheba` and `larceny:whip`. (Not yet run in an interactive session. The `/agents` command no longer opens a list, so this prompt replaces it. Part 1 uses a similar prompt headless.)
-- [ ] Type `/larceny:`. `onboard`, `wake-up`, `spawn-tbag`, `spawn-linc` and `spawn-sara` are offered.
+- [ ] Type `/larceny:`. `onboard`, `wake-up`, `spawn-reviewer`, `spawn-advisor` and `spawn-teacher` are offered.
 - [ ] Ask "which skills do you have from the larceny plugin?" The answer lists the skills under `skills/`.
 
 ## Part 3: fresh session and onboarding (for the owner)
@@ -38,7 +38,7 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 - [ ] Repeat the previous check with `claude --agent larceny:coordinator` instead. The session behaves the same way.
 - [ ] Add `{"agent": "larceny:scofield"}` to the project's `.claude/settings.json` and start a plain `claude`. The main thread is Scofield. Remove the line again if you do not want it.
 - [ ] Run `/larceny:onboard` with a real person answering. This is the clean-machine run that the onboarding work (#19) closed without. Check that `.larceny/config.md` and `.larceny/status.md` exist, that `.larceny/` is in `.gitignore`, that the persona-account steps can be skipped, and that a second run of the command shows the saved answers and asks before changing any.
-- [ ] Run `/larceny:spawn-tbag`. It confirms Tbag is running. Ask the main session to relay a message ("Ask Tbag: ...") and check that a reply comes back, with no id needed.
+- [ ] Run `/larceny:spawn-reviewer`. It confirms Tbag is running (the shipped default, since no `reviewer:` override is configured). Ask the main session to relay a message ("Ask Tbag: ...") and check that a reply comes back, with no id needed.
 - [ ] Without running any spawn command, ask the main session to relay a message to a persona that is not running yet ("Ask Sara: ..."). Check that it spawns Sara first, using her founding prompt, then delivers the message, and that it says it did the extra step.
 - [ ] Sign off one small ticket and ask Scofield to dispatch a coder. Check that the coder reads the ticket, works in a worktree, opens a pull request, messages the reviewer, and stops without merging until an approval arrives. Check that the coder finds the project's commands, though `.larceny/` is missing from its worktree.
 
@@ -52,7 +52,7 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 
 Run this last, on the clean machine from Part 2. The boxes are unticked because uninstall has not been run on this plugin. The commands come from the Claude Code plugin docs and are listed in [the README](../README.md#uninstall).
 
-- [ ] Run `/plugin uninstall larceny@larceny`, then press Esc to close the panel. Type `/larceny:`. None of `onboard`, `wake-up`, `spawn-tbag`, `spawn-linc` or `spawn-sara` is offered. If they still appear, run `/reload-plugins` and check again, and note that you had to.
+- [ ] Run `/plugin uninstall larceny@larceny`, then press Esc to close the panel. Type `/larceny:`. None of `onboard`, `wake-up`, `spawn-reviewer`, `spawn-advisor` or `spawn-teacher` is offered. If they still appear, run `/reload-plugins` and check again, and note that you had to.
 - [ ] Ask "List the agent types you can dispatch whose names start with `larceny:`". None of the seven `larceny:` agents is listed.
 - [ ] Run `/plugin marketplace remove larceny`. Run `/plugin marketplace list`. The `larceny` marketplace is gone.
 - [ ] In each project where you ran onboarding, delete the `.larceny/` folder and the `.gitignore` line that ignores it. If you added `{"agent": "larceny:scofield"}` to `.claude/settings.json`, remove that line.

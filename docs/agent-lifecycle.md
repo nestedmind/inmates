@@ -2,7 +2,7 @@
 
 When you stand up a team of agents, you decide for each role whether to start it once and keep it alive, or to start a new agent for every task. The choice follows how the role gets used. A role's importance does not enter into it.
 
-This page gives the rule, the reasons behind it, and a worked example using the team from `skills/scofield/SKILL.md`. If your team uses other names, map your roles onto the example by their usage.
+This page gives the rule, the reasons behind it, and a worked example using the team from `skills/coordinator/SKILL.md`. If your team uses other names, map your roles onto the example by their usage.
 
 ## The rule
 
@@ -52,7 +52,7 @@ The example team maps onto the rule like this.
 | Sucre, Mahone, Sheba, Whip | Coders | Fresh dispatch | One ticket each, read from source, isolated, reported once |
 | Scofield | Coordinator | Your call | See below |
 
-The coordinator sits between the two patterns. It lives across the whole project, so it usually runs as the main session, and it has to protect its context from filling up. `skills/scofield/SKILL.md` covers this by keeping coordination state in a status file outside the session, so a compaction does not lose it.
+The coordinator sits between the two patterns. It lives across the whole project, so it usually runs as the main session, and it has to protect its context from filling up. `skills/coordinator/SKILL.md` covers this by keeping coordination state in a status file outside the session, so a compaction does not lose it.
 
 To map your own team, sort each role by its usage. A role that several agents or people address over time, and that gains from memory, goes with Tbag, Linc and Sara. A role that takes one bounded task and reports goes with the coders.
 
@@ -68,22 +68,26 @@ The convention for how a person or another agent asks for this: name the persona
 
 If a future Claude Code build stops honoring `name` on the `Agent` tool, a spawn command falls back to reporting the agent's id and the addressing above stops working until then; nothing else in this section changes.
 
+## Spawn commands are named by role, not by persona
+
+Since #105, the three commands that start Tbag, Linc and Sara are named after the role each fills, not the shipped default's name: `commands/spawn-reviewer.md`, `commands/spawn-advisor.md` and `commands/spawn-teacher.md`. This is so the command keeps working, under the same name, whether a project runs the shipped default persona or a renamed one — the same way `/larceny:wake-up` is named after the coordinator role rather than "Scofield". Each command resolves the shipped default (Tbag, Linc or Sara) or a project's configured replacement (`.larceny/config.md`'s `reviewer:`, `advisor:` or `teacher:` line, with the founding prompt in a project-level `.claude/agents/<name>.md` file) before it spawns anything. See "Renaming Tbag, Linc or Sara without editing the plugin" in the README for the full mechanism.
+
 ## Model overrides
 
-Every way an agent gets spawned — a coder dispatch, a persistent persona started from its `commands/spawn-<persona>.md`, or the auto-spawn path below — checks `.larceny/config.md`'s `models:` line before picking a model, instead of using the shipped default unconditionally. See `skills/onboarding/SKILL.md`'s "Config format" for the exact syntax.
+Every way an agent gets spawned — a coder dispatch, a persistent persona started from its role's spawn command (`commands/spawn-reviewer.md`, `commands/spawn-advisor.md`, `commands/spawn-teacher.md`), or the auto-spawn path below — checks `.larceny/config.md`'s `models:` line before picking a model, instead of using the shipped default unconditionally. See `skills/onboarding/SKILL.md`'s "Config format" for the exact syntax.
 
-- `models: default`, or the key missing, or no `.larceny/config.md` at all: use the shipped default (the `model` in `agents/*.md` frontmatter for a coder or the coordinator, or the `model` bullet in the persona's own `commands/spawn-<persona>.md`).
+- `models: default`, or the key missing, or no `.larceny/config.md` at all: use the shipped default (the `model` in `agents/*.md` frontmatter for a coder or the coordinator, or the `model` bullet the persona's role resolves to in its spawn command).
 - `models: harness-default`: pass no explicit `model` parameter to the `Agent` call for any persona, so the harness's own default applies instead of the shipped default.
 - Either of the above can carry indented `<persona name>: <model>` override lines. When the persona being spawned has one, pass that model explicitly instead of the baseline for that mode. A persona with no override line keeps the baseline.
 
-This applies by persona name, not by mechanism, so Sara, Linc and Tbag are covered exactly like a coder or the coordinator: a `commands/spawn-<persona>.md` file's own `model` bullet is the shipped default that this override replaces, never a value to pass unconditionally.
+This applies by persona name, not by mechanism, so Sara, Linc and Tbag are covered exactly like a coder or the coordinator: the `model` bullet a spawn command resolves to (shipped default or project override) is the baseline this override replaces, never a value to pass unconditionally.
 
 ## Auto-spawn on first mention
 
 A session does not need a separate, explicit spawn step before it can relay to a persona. When a request names a persona that is not currently running ("ask Sara ...", "tell Linc ...") and `ListAgents` shows no live agent with that name:
 
-1. Find that persona's founding prompt. It lives in that persona's spawn command (`commands/spawn-<persona>.md`), or in the project's own definition of the persona if it has no spawn command.
-2. Call `Agent` with the `name`, `description` and `prompt` the spawn command specifies, filling in the project line the way the command describes. For `model`, apply "Model overrides" above instead of following the spawn command's `model` bullet unconditionally.
+1. Find that persona's founding prompt. For the reviewer, advisor or teacher role, it lives in that role's spawn command (`commands/spawn-reviewer.md`, `commands/spawn-advisor.md` or `commands/spawn-teacher.md`), which resolves the shipped default or a configured custom name itself — see "Spawn commands are named by role, not by persona" above. For a coder or the coordinator, it lives in the project's own definition of the persona if it has no spawn command.
+2. Call `Agent` with the `name`, `description` and `prompt` the spawn command resolves to, filling in the project line the way the command describes. For `model`, apply "Model overrides" above instead of following the spawn command's `model` bullet unconditionally.
 3. Once the call returns, send the original message to the new agent by name, as in "Addressing a persona" above.
 
 Say once that this happened, for example "Sara wasn't running, so I started her first," rather than silently absorbing the step. If the spawn call fails, report the failure and do not drop the message.

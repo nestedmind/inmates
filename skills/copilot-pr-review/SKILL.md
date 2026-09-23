@@ -5,7 +5,7 @@ description: Use when the owner asks for a GitHub Copilot code review on a pull 
 
 # Copilot PR review coordination
 
-**Default: Copilot review runs only when the owner asks for it.** Earlier versions of this skill had coders run Copilot rounds 1 and 2 on every pull request. That rule is removed. Without a request from the owner, do not request Copilot review, and do not wait for one. The reviewer persona's approval, described in the `scofield` skill, is the normal gate.
+**Default: Copilot review runs only when the owner asks for it.** Earlier versions of this skill had coders run Copilot rounds 1 and 2 on every pull request. That rule is removed. Without a request from the owner, do not request Copilot review, and do not wait for one. The reviewer persona's approval, described in the `coordinator` skill, is the normal gate.
 
 When the owner does ask, this skill covers the mechanics, how the rounds are handled, and how to judge Copilot's findings.
 
@@ -57,7 +57,7 @@ An empty `reviewRequests` list means "not pending", and says nothing about wheth
 
 ## Who handles which round
 
-The rounds follow the same ladder as the reviewer protocol in the `scofield` skill. They apply only after the owner has requested Copilot.
+The rounds follow the same ladder as the reviewer protocol in the `coordinator` skill. They apply only after the owner has requested Copilot.
 
 - Rounds 1 and 2: the coder handles Copilot's findings directly against the false-positive list below, fixes what is real and requests again. Escalate sooner when a finding might be a false positive that is not on the list, touches a security or concurrency property, or conflicts with a project convention the coder is unsure of.
 - Round 3 to 5: the coordinator takes over. When escalating, state the round number so the running count stays accurate.
