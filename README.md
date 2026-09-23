@@ -166,6 +166,10 @@ None of this makes a shipped default agent disappear. #82 confirmed, on a real i
 
 That leaves a collision-ambiguity risk, confirmed by direct test: a project's own bare name (say `arya`) and a hypothetical future plugin version shipping the same name namespaced (`larceny:arya`) coexist independently, with no overwrite and no error. This is not a functional break — the coordinator's own dispatch stays correct either way, because it reads the exact roster name from config — but it means a human could pick the wrong one from the Agent-tool UI by name alone. Avoid choosing a coder or coordinator name that could later read ambiguously against a namespaced plugin name, and prefer a name clearly distinct from the shipped cast (Scofield, Tbag, Sucre, Mahone, Sheba, Whip).
 
+A different kind of collision, also confirmed by direct test: installing two marketplaces that both ship a plugin literally named `larceny` collides in the dispatch namespace too — only one set of `larceny:*` agent types is exposed, not two side by side. This needs two different marketplace sources both choosing the same plugin name, unlikely in ordinary use, but worth knowing if you ever add a second source.
+
+One combination #82 did not directly test: a coordinator-override file and a customized coder roster active in the same project at once. Nothing in either mechanism's design suggests they would conflict — they read different keys — but it has not been confirmed together.
+
 ## Model assignments
 
 Each persona's model is a cost decision as much as a technical one, so onboarding shows it and lets you change it. The shipped default:
@@ -183,6 +187,8 @@ This is a recommendation, not a requirement. During onboarding you choose to kee
 ## Identity wiring
 
 Each persona can run under its own GitHub account, so commits, pull requests and reviews show who did what. This is optional, and everything in the repo works with your own `gh` login and git identity. The setup steps, and which ones only a person can do, are in [docs/identity-wiring.md](docs/identity-wiring.md).
+
+Without a token, two personas working in the same project cannot be told apart by GitHub account — a pull request from an untokened coder shows your own ambient login, the same as every other untokened persona's, confirmed by #82. This is the expected result of skipping identity wiring, not a bug: per-persona attribution only works once each persona has its own token.
 
 ## Agent lifecycle
 
