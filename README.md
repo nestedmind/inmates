@@ -152,7 +152,19 @@ A persona's name lives in the skill that defines it. To rename one, change the `
 
 For the coordinator specifically, there is a second way that does not touch any shipped file, confirmed in issue #70: add a project-level `.claude/agents/<name>.md` file whose body says something like "You are `<name>`, the coordinator. Follow the `scofield` skill." Because it lives in your project, not the plugin, it survives plugin updates the way an edit to `agents/scofield.md` would not.
 
-`/larceny:wake-up` looks for this file before it does anything else. It scans `.claude/agents/*.md` for one whose body names the coordinator role and points at the `scofield` skill; if it finds exactly one, it acts under that name for the session instead of Scofield. With no such file, or with the coordinator's name left at its default, nothing changes. `agents/coordinator.md`, the generic alias for `claude --agent`, resolves the same way. This resolution is out of scope for the other personas (coders, reviewer, advisor, teacher) as of this writing — rename those with the frontmatter method above.
+`/larceny:wake-up` looks for this file before it does anything else. It scans `.claude/agents/*.md` for one whose body names the coordinator role and points at the `scofield` skill; if it finds exactly one, it acts under that name for the session instead of Scofield. With no such file, or with the coordinator's name left at its default, nothing changes. `agents/coordinator.md`, the generic alias for `claude --agent`, resolves the same way. This resolution is coordinator-only. Rename a reviewer, advisor or teacher with the frontmatter method above.
+
+### Renaming a coder without editing the plugin
+
+Coders work the same way, since #77 split each shipped coder (`agents/mahone.md`, `sheba.md`, `sucre.md`, `whip.md`) into a thin file that only sets a name, a GitHub account and token path, and "Follow the `coder` skill." A project-level `.claude/agents/<name>.md` file with the same shape — `name`, `skills: [coder, ...]`, a body reading "You are `<name>`, a coder. Follow the `coder` skill.", and a token file path if the project uses persona accounts — works exactly like a shipped coder, without editing any shipped file. `larceny:onboard`'s roster gate writes this file for you when you choose to name your own crew; you can also write it by hand and record the new name in `.larceny/config.md`'s `coders:` line yourself.
+
+Unlike the coordinator, a renamed coder is not resolved automatically at invocation time — a coder is a fresh subagent dispatch, not a session someone starts by name. Instead, the `scofield` skill reads `coders:` from `.larceny/config.md` before every dispatch and uses the roster's names.
+
+### The hiding ceiling
+
+None of this makes a shipped default agent disappear. #82 confirmed, on a real installed copy of the plugin, that `larceny:sheba`, `larceny:mahone`, `larceny:sucre`, `larceny:whip` and `larceny:scofield` stay listed and directly dispatchable through the Agent tool for as long as the plugin is installed, no matter what a project names its replacements. There is no file-naming or precedence trick that hides or removes a shipped agent type — only the coordinator's own automated dispatch is guaranteed to use a customized roster's names, because it reads them from config instead of guessing. A human picking an agent by name from the Agent-tool UI can still reach a shipped default directly.
+
+That leaves a collision-ambiguity risk, confirmed by direct test: a project's own bare name (say `arya`) and a hypothetical future plugin version shipping the same name namespaced (`larceny:arya`) coexist independently, with no overwrite and no error. This is not a functional break — the coordinator's own dispatch stays correct either way, because it reads the exact roster name from config — but it means a human could pick the wrong one from the Agent-tool UI by name alone. Avoid choosing a coder or coordinator name that could later read ambiguously against a namespaced plugin name, and prefer a name clearly distinct from the shipped cast (Scofield, Tbag, Sucre, Mahone, Sheba, Whip).
 
 ## Identity wiring
 

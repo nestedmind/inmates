@@ -29,6 +29,7 @@ Three roles carry the rules below.
 
 ## Dispatching a ticket
 
+- Read the coder roster from `.larceny/config.md`'s `coders:` line before dispatching any coder. `coders: default` (or the key missing) means the shipped names (`larceny:sheba`, `larceny:mahone`, `larceny:sucre`, `larceny:whip`). A customized roster names its own coders instead. This is a hard rule, not a suggestion: once the roster has replaced a shipped name, never dispatch that shipped default for coder work again, even though it stays listed and dispatchable in the raw Agent-tool listing (there is no mechanism to hide it, confirmed by #82). Dispatch the exact name the roster gives — never guess or fall back to a shipped name because the custom one is unfamiliar.
 - One ticket, one subagent, one worktree, one branch, one pull request. A subagent never pushes to the main branch.
 - Give the ticket number and tell the subagent to read the ticket itself (`gh issue view <n>`). Do not summarize the ticket in the dispatch prompt, because a summary can be wrong. The subagent treats the issue text as the truth and tells you where your prompt differs from it.
 - Give the subagent operating context: what has already landed, which conventions exist (test layout, lint rules), and any infrastructure trouble spots in the environment.
