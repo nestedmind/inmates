@@ -61,7 +61,7 @@ If a change touches those folders but users need not receive it, such as a typo 
 Maintainers only. A contributor bumps the version in their own pull request, as above, and does not tag or publish. After a maintainer merges a version bump, the maintainer releases it:
 
 1. Merge the pull request that bumps `version` in `.claude-plugin/plugin.json`.
-2. Tag the merge commit `vX.Y.Z`, matching that version, and push the tag.
+2. From the merge commit, run `claude plugin tag --push` (add `-m "<message>"` for an annotation). It creates a `{name}--v{version}` tag (for example `larceny--v0.1.1`), validates that `plugin.json` and the marketplace entry agree on the version, and pushes it with `--push`. Use this instead of typing a bare `vX.Y.Z` tag by hand — a hand-typed tag skips that validation.
 3. Publish a GitHub Release from the tag, and use GitHub's "Generate release notes" to fill in the notes.
 
 A `CHANGELOG.md` is optional, and this repo does not keep one. The release notes are the record.
