@@ -68,12 +68,22 @@ The convention for how a person or another agent asks for this: name the persona
 
 If a future Claude Code build stops honoring `name` on the `Agent` tool, a spawn command falls back to reporting the agent's id and the addressing above stops working until then; nothing else in this section changes.
 
+## Model overrides
+
+Every way an agent gets spawned — a coder dispatch, a persistent persona started from its `commands/spawn-<persona>.md`, or the auto-spawn path below — checks `.larceny/config.md`'s `models:` line before picking a model, instead of using the shipped default unconditionally. See `skills/onboarding/SKILL.md`'s "Config format" for the exact syntax.
+
+- `models: default`, or the key missing, or no `.larceny/config.md` at all: use the shipped default (the `model` in `agents/*.md` frontmatter for a coder or the coordinator, or the `model` bullet in the persona's own `commands/spawn-<persona>.md`).
+- `models: harness-default`: pass no explicit `model` parameter to the `Agent` call for any persona, so the harness's own default applies instead of the shipped default.
+- Either of the above can carry indented `<persona name>: <model>` override lines. When the persona being spawned has one, pass that model explicitly instead of the baseline for that mode. A persona with no override line keeps the baseline.
+
+This applies by persona name, not by mechanism, so Sara, Linc and Tbag are covered exactly like a coder or the coordinator: a `commands/spawn-<persona>.md` file's own `model` bullet is the shipped default that this override replaces, never a value to pass unconditionally.
+
 ## Auto-spawn on first mention
 
 A session does not need a separate, explicit spawn step before it can relay to a persona. When a request names a persona that is not currently running ("ask Sara ...", "tell Linc ...") and `ListAgents` shows no live agent with that name:
 
 1. Find that persona's founding prompt. It lives in that persona's spawn command (`commands/spawn-<persona>.md`), or in the project's own definition of the persona if it has no spawn command.
-2. Call `Agent` with the `name`, `description` and `prompt` the spawn command specifies, filling in the project line the way the command describes.
+2. Call `Agent` with the `name`, `description` and `prompt` the spawn command specifies, filling in the project line the way the command describes. For `model`, apply "Model overrides" above instead of following the spawn command's `model` bullet unconditionally.
 3. Once the call returns, send the original message to the new agent by name, as in "Addressing a persona" above.
 
 Say once that this happened, for example "Sara wasn't running, so I started her first," rather than silently absorbing the step. If the spawn call fails, report the failure and do not drop the message.
