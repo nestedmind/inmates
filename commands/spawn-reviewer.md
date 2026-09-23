@@ -7,8 +7,8 @@ Start the adversarial code reviewer as a persistent agent. This command is named
 
 ## Resolve the persona first
 
-1. Look for `.larceny/config.md` in the current project. If it does not exist, or its `reviewer:` line is missing or says `default`, the persona is Tbag, the shipped default. Use the founding prompt below as it is written.
-2. Otherwise `reviewer:` names a custom persona. Read the project-level file `.claude/agents/<name>.md` for that name. Use its body as the founding prompt (filling in the project line the same way as below) and its `name:` frontmatter as the `name` parameter. If the file is missing, tell the person the config points at a name with no override file and fall back to Tbag, the shipped default, rather than failing silently.
+1. Resolve `reviewer:` by `docs/crew-resolution.md` (the project's `.larceny/config.md`, else the global file when the project says `crew: global`, else the shipped default). If it is missing everywhere or says `default`, the persona is Tbag, the shipped default. Use the founding prompt below as it is written.
+2. Otherwise `reviewer:` names a custom persona. Read that name's `.claude/agents/<name>.md` file, looking in the project first and then in `~/.claude/agents/`. Use its body as the founding prompt (filling in the project line the same way as below) and its `name:` frontmatter as the `name` parameter. If the file is in neither place, tell the person the config points at a name with no override file and fall back to Tbag, the shipped default, rather than failing silently.
 
 Everywhere below, "the persona" means whichever name this resolved to, and "the founding prompt" means whichever prompt (shipped or project-level) this resolved to.
 
@@ -18,7 +18,7 @@ Call the `Agent` tool once with these parameters.
 
 - `name`: the persona's name (`tbag` for the shipped default). The `Agent` tool honors `name`: once set, the agent is reachable afterward as `SendMessage({to: "<name>", ...})`, with no id needed. If a future version of the tool stops accepting `name`, leave it out and do not claim the agent has one.
 - `description`: `<persona name>, adversarial code reviewer`.
-- `model`: `opus` for the shipped default, only if the `Agent` tool accepts a `model` parameter. If it does not, leave it out and do not claim the persona runs on a particular model. If `.larceny/config.md`'s `models:` line overrides this persona's name or says `harness-default`, follow that instead — see "Model overrides" in `docs/agent-lifecycle.md`.
+- `model`: `opus` for the shipped default, only if the `Agent` tool accepts a `model` parameter. If it does not, leave it out and do not claim the persona runs on a particular model. If `models:`, resolved by `docs/crew-resolution.md`, overrides this persona's name or says `harness-default`, follow that instead — see "Model overrides" in `docs/agent-lifecycle.md`.
 - `prompt`: the founding prompt resolved above, with the project line filled in as described after it.
 
 Shipped founding prompt (Tbag):

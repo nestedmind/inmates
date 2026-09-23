@@ -57,5 +57,8 @@ for name in sucre mahone sheba whip tbag; do
   grep -q '^  - secure-coding$' "$root/agents/$name.md" 2>/dev/null || bad "$name: does not preload secure-coding"
 done
 
+# The crew-resolution rule and every reader of it.
+"$root/scripts/check-crew-resolution.sh" || fail=1
+
 [ "$fail" = 0 ] && echo "ok: agent definitions pass"
 exit "$fail"
