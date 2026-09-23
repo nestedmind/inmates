@@ -1,6 +1,7 @@
 ---
 name: coordinator
 description: Generic alias for the coordinator persona. Resolves to Scofield, or to your renamed coordinator if you have one. Use as the main session agent.
+model: opus
 skills:
   - scofield
   - copilot-pr-review
