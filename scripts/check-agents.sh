@@ -57,6 +57,20 @@ for name in sucre mahone sheba whip tbag; do
   grep -q '^  - secure-coding$' "$root/agents/$name.md" 2>/dev/null || bad "$name: does not preload secure-coding"
 done
 
+# Direct teacher/advisor entry and the one shared bring-in-by-name skill.
+for name in teacher advisor coordinator; do
+  grep -q '^  - bring-in-personas$' "$root/agents/$name.md" 2>/dev/null || bad "$name: does not preload bring-in-personas"
+  # The behavior lives only in the skill: no copy of its rules in an agent file.
+  if grep -qiE 'verbatim|auto-spawn' "$root/agents/$name.md" 2>/dev/null; then bad "$name: duplicates bring-in-personas rules"; fi
+done
+grep -q 'verbatim' "$root/skills/bring-in-personas/SKILL.md" 2>/dev/null || bad "skills/bring-in-personas/SKILL.md: missing the verbatim rule"
+# Shipped founding prompts in the agent files match the spawn commands.
+for pair in teacher:Sara advisor:Linc; do
+  role="${pair%%:*}"; who="${pair##*:}"
+  ln="$(grep -m1 "^You are $who," "$root/commands/spawn-$role.md")"
+  [ -n "$ln" ] && grep -qF "$ln" "$root/agents/$role.md" || bad "agents/$role.md: founding prompt differs from commands/spawn-$role.md"
+done
+
 # The crew-resolution rule and every reader of it.
 "$root/scripts/check-crew-resolution.sh" || fail=1
 
