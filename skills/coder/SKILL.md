@@ -21,7 +21,13 @@ A fresh worktree does not contain the gitignored `.larceny/` folder. Read `.larc
 
 ## Move your card
 
-If the config you read has `board: done` and the dispatch prompt has no command to move your ticket to "In review", do not skip the move. Look up the IDs yourself from the config's board keys (`gh project item-add <n> --owner <owner> --url <issue-url> --format json` returns the item id), or tell the coordinator the command is missing. When your PR opens, run the move and read the card back through the API to confirm it changed.
+If the config you read has `board: done` and the dispatch prompt has no command to move your ticket to "In review", do not skip the move. Look up the IDs yourself from the config's board keys (`gh project item-add <n> --owner <owner> --url <issue-url> --format json` returns the item id), or tell the coordinator the command is missing. When your PR opens, run the move and read the card back through the API to confirm it changed. The read-back is a GraphQL query on the item id, and the reply must show the new status name:
+
+```
+gh api graphql -f query='query($id:ID!){node(id:$id){... on ProjectV2Item{fieldValueByName(name:"Status"){... on ProjectV2ItemFieldSingleSelectValue{name}}}}}' -f id=<item-id>
+```
+
+If the name is not "In review", the move did not land: say so in your report instead of claiming it did.
 
 ## Git identity
 
