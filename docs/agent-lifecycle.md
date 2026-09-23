@@ -59,3 +59,23 @@ To map your own team, sort each role by its usage. A role that several agents or
 ## Roles that could go either way
 
 A role can change pattern as its use changes. A reviewer that a project calls on twice a month gains little from staying alive, and a fresh dispatch that reads the review skill each time costs less. A coder that a human starts to consult daily about one codebase behaves like an advisor. When a role's usage changes, move it.
+
+## Addressing a persona
+
+Once a spawn command starts a persona with `name` set (`sara`, `linc`, `tbag`), message it by that name from then on: `SendMessage({to: "sara", ...})` resolves directly, and no id is needed. `SendMessage`'s own tool spec says it plainly: "the name IS the address; there is no separate address syntax." This was checked in practice, not just assumed from the spec: a session that spawned an agent named `sara` could still reach it by that bare name later in the same session, with its id never used.
+
+The convention for how a person or another agent asks for this: name the persona in plain text, for example "Ask Sara: <question>" or "Tell Tbag to review PR 12". Do not use an `@name` prefix. GitHub's own `@`-mentions on issues and pull requests do not reach a running session (see the Limitations section of the README), and giving `@name` a second, working meaning here would blur two different things that look the same. Plain-text naming is the one convention; use it everywhere a persona is addressed.
+
+If a future Claude Code build stops honoring `name` on the `Agent` tool, a spawn command falls back to reporting the agent's id and the addressing above stops working until then; nothing else in this section changes.
+
+## Auto-spawn on first mention
+
+A session does not need a separate, explicit spawn step before it can relay to a persona. When a request names a persona that is not currently running ("ask Sara ...", "tell Linc ...") and `ListAgents` shows no live agent with that name:
+
+1. Find that persona's founding prompt. It lives in that persona's spawn command (`commands/spawn-<persona>.md`), or in the project's own definition of the persona if it has no spawn command.
+2. Call `Agent` with the `name`, `description` and `prompt` the spawn command specifies, filling in the project line the way the command describes.
+3. Once the call returns, send the original message to the new agent by name, as in "Addressing a persona" above.
+
+Say once that this happened, for example "Sara wasn't running, so I started her first," rather than silently absorbing the step. If the spawn call fails, report the failure and do not drop the message.
+
+This applies to any session asked to relay a message, not only the coordinator.

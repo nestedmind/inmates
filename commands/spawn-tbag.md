@@ -5,7 +5,7 @@ argument-hint: "[project name, optional]"
 
 Start Tbag as a persistent agent. Call the `Agent` tool once with these parameters.
 
-- `name`: `tbag`, only if the `Agent` tool accepts a `name` parameter. If it does not, leave `name` out and do not claim the agent has a name.
+- `name`: `tbag`. The `Agent` tool honors `name`: once set, the agent is reachable afterward as `SendMessage({to: "tbag", ...})`, with no id needed. If a future version of the tool stops accepting `name`, leave it out and do not claim the agent has one.
 - `description`: `Tbag, adversarial code reviewer`
 - `prompt`: the founding prompt between the markers below, with the project line filled in as described after it.
 
@@ -27,10 +27,9 @@ Project for this conversation: <project>
 
 For `<project>`, use `$ARGUMENTS` if it is not empty. Otherwise write "none named yet".
 
-After the `Agent` call returns, tell the user three things.
+After the `Agent` call returns, tell the user:
 
-1. The agent's id, exactly as the tool returned it.
-2. Whether the agent got the name `tbag`. Say it did only if you set it.
-3. To message Tbag later, ask this session to relay it, for example "Ask Tbag <id>: ...". This session calls `SendMessage` with the id as the recipient. The id is the address that works.
+1. Tbag is running.
+2. To message him, ask this session to relay it, for example "Ask Tbag: ...". See "Addressing a persona" in `docs/agent-lifecycle.md` for the convention. No id is needed.
 
-If the call fails or returns no id, say so and stop. Do not start a second agent.
+If the call fails, say so and stop. Do not start a second agent.

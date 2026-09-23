@@ -51,7 +51,7 @@ Both resolve the same way: to Scofield, or to your renamed coordinator if you ha
 
 ### Optional: have the plugin explained first
 
-Run `/larceny:spawn-sara`. It starts Sara, a teacher, as a background agent, and reports the agent's id. Sara gauges what you already know, explains in steps, and checks your understanding. Her founding prompt tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara <id>: explain how git rebase works." Add a project name after the command to give her one project for the conversation. The command file calls no `gh` command, so starting Sara needs no `gh` login. That the agent itself needs none is untested.
+Run `/larceny:spawn-sara`. It starts Sara, a teacher, as a background agent named `sara`. Sara gauges what you already know, explains in steps, and checks your understanding. Her founding prompt tells her to ignore the project around her, and she reads nothing in a repository until you name it. To message her, ask the main session to relay: "Ask Sara: explain how git rebase works." Add a project name after the command to give her one project for the conversation. The command file calls no `gh` command, so starting Sara needs no `gh` login. That the agent itself needs none is untested.
 
 ## What you need
 
@@ -136,9 +136,9 @@ Three personas run as long-lived agents that you message across a session. A sla
 
 Each command starts an agent with that persona's founding prompt and tells it to ignore the project around it. Add a project name after the command, such as `/larceny:spawn-linc my-app`, to give the agent one project for the conversation. Without a name, the agent asks.
 
-Each command reports the agent's id when it finishes, and the agent is reachable by that id. Whether it also gets a name such as `tbag` depends on the harness. The command sets a name only when the `Agent` tool accepts one, so keep the id.
+Each command gives the agent a name, such as `tbag`, and the agent is reachable by that name for the rest of the session, no id needed.
 
-To talk to the agent, ask the main session to relay: "Ask Tbag <id>: review PR 12". The main session calls `SendMessage` with the id.
+To talk to the agent, ask the main session to relay: "Ask Tbag: review PR 12". The main session calls `SendMessage` with the name. If the persona is not running yet, the session starts it first, using the same founding prompt as its spawn command, then delivers the message. See "Addressing a persona" and "Auto-spawn on first mention" in [docs/agent-lifecycle.md](docs/agent-lifecycle.md).
 
 The coders are not spawned this way. The coordinator starts a fresh coder for each ticket.
 

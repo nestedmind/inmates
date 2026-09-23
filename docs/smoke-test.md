@@ -38,7 +38,8 @@ Use a machine, container or user account that has Claude Code and `gh` but no co
 - [ ] Repeat the previous check with `claude --agent larceny:coordinator` instead. The session behaves the same way.
 - [ ] Add `{"agent": "larceny:scofield"}` to the project's `.claude/settings.json` and start a plain `claude`. The main thread is Scofield. Remove the line again if you do not want it.
 - [ ] Run `/larceny:onboard` with a real person answering. This is the clean-machine run that the onboarding work (#19) closed without. Check that `.larceny/config.md` and `.larceny/status.md` exist, that `.larceny/` is in `.gitignore`, that the persona-account steps can be skipped, and that a second run of the command shows the saved answers and asks before changing any.
-- [ ] Run `/larceny:spawn-tbag`. It reports an agent id. Ask the main session to relay a message to that id and check that a reply comes back.
+- [ ] Run `/larceny:spawn-tbag`. It confirms Tbag is running. Ask the main session to relay a message ("Ask Tbag: ...") and check that a reply comes back, with no id needed.
+- [ ] Without running any spawn command, ask the main session to relay a message to a persona that is not running yet ("Ask Sara: ..."). Check that it spawns Sara first, using her founding prompt, then delivers the message, and that it says it did the extra step.
 - [ ] Sign off one small ticket and ask Scofield to dispatch a coder. Check that the coder reads the ticket, works in a worktree, opens a pull request, messages the reviewer, and stops without merging until an approval arrives. Check that the coder finds the project's commands, though `.larceny/` is missing from its worktree.
 
 ## Part 4: pilot in a second project (for the owner)

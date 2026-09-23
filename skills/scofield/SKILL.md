@@ -56,6 +56,10 @@ If a token file is missing, use the ambient `gh` login and the user's own git id
 
 Never print, log or commit the contents of a token file. Do not echo it, do not put it in a command you display, and do not write it into a status file, a comment or a commit message. Pass it inline through `$(cat <file>)` and nowhere else.
 
+## Addressing a persona
+
+Message a running persona by its name (`sara`, `linc`, `tbag`): `SendMessage({to: "tbag", ...})` resolves directly, no id needed. If a persona a message names is not in `ListAgents`, spawn it first with its founding prompt from `commands/spawn-<persona>.md`, then relay. See "Addressing a persona" and "Auto-spawn on first mention" in `docs/agent-lifecycle.md` for the convention and the full procedure; this skill does not repeat them.
+
 ## Reviewer protocol
 
 This protocol changes two defaults from earlier versions of this skill.
