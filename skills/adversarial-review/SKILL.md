@@ -46,28 +46,34 @@ Write each finding plainly, following `plain-writing` if it is installed. The ti
 
 ### Post line-anchored findings inline
 
-A blocker or suggestion that names a concrete `path:line` is a real inline review comment, anchored to that line, not just a paragraph in the review body. Post the whole review — the verdict and every inline comment — in one call to `POST /repos/<owner>/<repo>/pulls/<n>/reviews`:
+A blocker or suggestion that names a concrete `path:line` is a real inline review comment, anchored to that line, not just a paragraph in the review body. Post the whole review — the verdict and every inline comment — in one call to `POST /repos/<owner>/<repo>/pulls/<n>/reviews`, with a JSON body, not `-f`/`-F` bracket flags: `gh api` flattens `comments[][path]=...` repeated across several comments into flat, repeated top-level query parameters instead of an array of objects, so more than one inline comment silently fails to reach the API as `comments`. Write the payload to a file (or a heredoc) and pass it with `--input`:
 
 ```
-gh api repos/<owner>/<repo>/pulls/<n>/reviews \
-  -f commit_id=<head-sha> \
-  -f event=<COMMENT|REQUEST_CHANGES> \
-  -f body='<short summary and verdict>' \
-  -f 'comments[][path]=<path>' -F 'comments[][line]=<line>' -f 'comments[][body]=<finding>' \
-  -f 'comments[][path]=<path2>' -F 'comments[][line]=<line2>' -f 'comments[][body]=<finding2>'
+cat > /tmp/review.json <<'EOF'
+{
+  "commit_id": "<head-sha>",
+  "event": "<COMMENT|REQUEST_CHANGES>",
+  "body": "<short summary and verdict>",
+  "comments": [
+    {"path": "<path>", "line": <line>, "body": "<finding>"},
+    {"path": "<path2>", "line": <line2>, "body": "<finding2>"}
+  ]
+}
+EOF
+gh api repos/<owner>/<repo>/pulls/<n>/reviews --input /tmp/review.json
 ```
 
 Each `comments[]` entry's `body` is one finding, written with its full three-part structure (tier, location, failure scenario), so the comment stands on its own in the diff view. `event` follows the same rule as the verdict below: `REQUEST_CHANGES` needs your own account, so without one use `COMMENT` and still put `APPROVED` / `CHANGES REQUESTED` at the start of the body.
 
-A finding with no single line to anchor to — a cross-cutting concern, a missing test file, a gap you see only at the acceptance-criterion level — has no `path:line` and stays in the review body, same as today. Do not force a multi-line or file-level concern onto one line just to make it inline.
+A finding with no single line to anchor to — a cross-cutting concern, a missing test file, a gap you see only at the acceptance-criterion level — has no `path:line` and stays in the review body, same as today. Do not force a multi-line or file-level concern onto one line just to make it inline. This also covers the acceptance-criteria walkthrough in Process step 4 (met, unmet or untested for each criterion): it has no single line either, so it stays in the body in full, same as a body-only finding.
 
-After you post, read the comment back (`gh api repos/<owner>/<repo>/pulls/<n>/comments`) and check that `line` matches what you sent and the comment is not orphaned. A comment GitHub could not anchor is not a substitute for the finding: fix the location and repost, or fall back to the body.
+After you post, read the comments back (`gh api repos/<owner>/<repo>/pulls/<n>/comments`) and check both that the count matches the number of line-anchored findings you sent — the flattening failure above drops comments silently rather than erroring — and that each one's `line` matches what you sent and is not orphaned. A comment GitHub could not anchor, or a finding that did not come back at all, is not a substitute for the finding: fix the payload and repost, or fall back to the body.
 
 ## Verdict
 
 End with APPROVED or CHANGES REQUESTED, and name the head commit it applies to. If you cannot decide, say what you would need to see.
 
-Keep the review body itself short once findings are inline: the verdict, the head commit, and a one- or two-sentence summary pointing to the inline comments for the line-level detail. Body-only findings (the ones with no single-line anchor) still go in the body in full.
+Keep the review body itself short once findings are inline: the verdict, the head commit, and a one- or two-sentence summary pointing to the inline comments for the line-level detail. Body-only findings (the ones with no single-line anchor, including the acceptance-criteria walkthrough) still go in the body in full.
 
 Time pressure, a green test run and a long day of work are not evidence. A request for a quick approve changes nothing about the diff.
 
