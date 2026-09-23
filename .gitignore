@@ -6,3 +6,7 @@ gh-*-token.*
 .env
 .env.*
 !.env.example
+
+# Coordinator state (Larceny/Scofield). Local to this machine; commit if the
+# team wants to share it.
+.larceny/
