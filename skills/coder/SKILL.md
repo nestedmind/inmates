@@ -45,7 +45,17 @@ Branch from `origin/main`, or from the project's default branch. Never push to i
 
 ## Reviewer protocol
 
-When the PR is open, message the reviewer with the PR number, using the id the coordinator gave you. Wait for an approval on the current head: an APPROVED review, or, when one login does everything, a reviewer comment that starts APPROVED and names the head. Then squash-merge your own PR. No approval, no merge.
+When the PR is open, message the reviewer with the PR number, using the id the coordinator gave you. Wait for an approval on the current head, and check who posted it before you merge. If the reviewer persona has a token file (`${LARCENY_CONFIG_DIR:-$HOME/.config/larceny}/gh-<reviewer>-token`), the only accepted approval is a formal review whose author is that persona's account, on the current head:
+
+```
+tok="${LARCENY_CONFIG_DIR:-$HOME/.config/larceny}/gh-<reviewer>-token"
+test -e "$tok" && ! test -r "$tok" && echo "STOP: token file unreadable"
+acct=$(GH_TOKEN=$(cat "$tok") gh api user --jq .login)
+head=$(gh pr view <n> --json headRefOid --jq .headRefOid)
+gh api --paginate repos/<owner>/<repo>/pulls/<n>/reviews --jq ".[] | select(.user.login==\"$acct\" and .state==\"APPROVED\" and .commit_id==\"$head\") | .id" | grep -q . && echo ACCEPT || echo REFUSE
+```
+
+To see every review, run `gh api repos/<owner>/<repo>/pulls/<n>/reviews --jq '.[] | "\(.user.login) \(.state) \(.commit_id[0:7])"'`. On REFUSE, a comment or a review from any other login (the owner's login included) does not count: do not merge, and re-request the review from the reviewer. Only when no token file exists is a reviewer comment accepted, and then its first line must name the persona and say it was posted via the owner's login, followed by APPROVED and the head. Then squash-merge your own PR. No approval, no merge.
 
 If a permission check blocks the merge, stop and report the block to the coordinator. Do not retry or work around it.
 

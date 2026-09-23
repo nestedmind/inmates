@@ -23,14 +23,21 @@ Before you review, read the `CLAUDE.md`, contributing notes and conventions of t
 
 ## Reviewer identity
 
-Use your persona's GitHub account only if its token file exists, as `docs/identity-wiring.md` describes. Then prefix each `gh` command with `GH_TOKEN=$(cat <token-file>)`, for example:
+Test for your token file with an explicit command, and report the result in your first message. Do not assume either way.
 
 ```
-GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh pr review <n> --approve --body "..."
-GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh api repos/<owner>/<repo>/pulls/<n>/reviews --input /tmp/review.json
+test -r "${LARCENY_CONFIG_DIR:-$HOME/.config/larceny}/gh-<persona>-token" && echo readable || echo "not readable"
 ```
 
-With no token file, use the ambient `gh` login instead, and post a comment that begins with `APPROVED` or `CHANGES REQUESTED` rather than a formal review action, as the "Working inside the review protocol" section below describes. Never print, log or commit a token.
+Post every verdict with `post-review.sh`, which sits next to this skill file (the "Base directory" line the harness prints when it loads this skill gives its folder). The plugin's `scripts/` folder is not on any path an installed agent knows, and this folder is, so the helper lives here.
+
+```
+<base-directory>/post-review.sh <persona> <pr> <approve|request-changes|comment> <body-file>
+```
+
+It reads the token, refuses to run when the file exists but is unreadable (exit 3, post nothing, tell the coder), posts a formal review under that account only, then reads the review back and exits zero only if its author is the token's own login and its commit is the PR's current head. A non-zero exit means the verdict is not posted. For line-anchored findings, pass a `.json` body file (see "Post line-anchored findings inline"); the script adds `event` and `commit_id`. If you cannot run the script, use the exact form `GH_TOKEN=$(cat <token-file>) gh pr review <n> --approve --body-file <file>` and read the author back yourself. Never the ambient login when a token file exists, and never a plain comment.
+
+With no token file, the script posts a plain comment under the ambient `gh` login. The comment's first line says who wrote it: `<Name> (reviewer persona), posted via the owner's login because no persona account is configured.` Never post an unlabeled APPROVED under someone's name. Never print, log or commit a token.
 
 ## Process
 
@@ -57,7 +64,7 @@ Write each finding plainly, following `plain-writing` if it is installed. The ti
 
 ### Post line-anchored findings inline
 
-A blocker or suggestion that names a concrete `path:line` is a real inline review comment, anchored to that line, not just a paragraph in the review body. Post the whole review — the verdict and every inline comment — in one call to `POST /repos/<owner>/<repo>/pulls/<n>/reviews`, with a JSON body, not `-f`/`-F` bracket flags: `gh api` flattens `comments[][path]=...` repeated across several comments into flat, repeated top-level query parameters instead of an array of objects, so more than one inline comment silently fails to reach the API as `comments`. Write the payload to a file (or a heredoc) and pass it with `--input`:
+A blocker or suggestion that names a concrete `path:line` is a real inline review comment, anchored to that line, not just a paragraph in the review body. Post the whole review — the verdict and every inline comment — in one call to `POST /repos/<owner>/<repo>/pulls/<n>/reviews`, with a JSON body, not `-f`/`-F` bracket flags: `gh api` flattens `comments[][path]=...` repeated across several comments into flat, repeated top-level query parameters instead of an array of objects, so more than one inline comment silently fails to reach the API as `comments`. Write the payload to a file and pass it to `post-review.sh`, which sends it with `--input`:
 
 ```
 cat > /tmp/review.json <<'EOF'
@@ -71,10 +78,10 @@ cat > /tmp/review.json <<'EOF'
   ]
 }
 EOF
-gh api repos/<owner>/<repo>/pulls/<n>/reviews --input /tmp/review.json
+<base-directory>/post-review.sh <persona> <n> <approve|request-changes|comment> /tmp/review.json
 ```
 
-Each `comments[]` entry's `body` is one finding, written with its full three-part structure (tier, location, failure scenario), so the comment stands on its own in the diff view. `event` follows the same rule as the verdict below: `REQUEST_CHANGES` needs your own account, so without one use `COMMENT` and still put `APPROVED` / `CHANGES REQUESTED` at the start of the body.
+Each `comments[]` entry's `body` is one finding, written with its full three-part structure (tier, location, failure scenario), so the comment stands on its own in the diff view. `post-review.sh` sets `event` from the verdict word. Without a persona account it posts the body as a labeled comment, so put `APPROVED` / `CHANGES REQUESTED` at the start of the body.
 
 A finding with no single line to anchor to — a cross-cutting concern, a missing test file, a gap you see only at the acceptance-criterion level — has no `path:line` and stays in the review body, same as today. Do not force a multi-line or file-level concern onto one line just to make it inline. This also covers the acceptance-criteria walkthrough in Process step 4 (met, unmet or untested for each criterion): it has no single line either, so it stays in the body in full, same as a body-only finding.
 
@@ -93,7 +100,7 @@ Time pressure, a green test run and a long day of work are not evidence. A reque
 This follows the reviewer protocol in `coordinator`.
 
 - The coder messages you with a pull request number when it is done. That message starts your review; it does not end it, and replying to it is not the review.
-- Your review is not done until it exists on GitHub. With your own GitHub account, post a real review: `gh pr review <n> --approve --body "..."` or `--request-changes`. Without one, GitHub blocks approving your own pull request, so post a comment that begins with APPROVED or CHANGES REQUESTED instead. A verdict that only exists as a reply to the coder, and never as a GitHub review or comment, is not a review — confirm the post actually landed (re-fetch it, for example `gh pr view <n> --json reviews` or `--json comments`) before telling the coder anything. The coder waits for that GitHub-side review or comment before it merges, not for a message from you. If a ruleset demands a formal approval that no account can give, say so and let the owner approve.
+- Your review is not done until it exists on GitHub. With your own GitHub account, post a real review through `post-review.sh`. Without one, GitHub blocks approving your own pull request, so the script posts a comment whose first line names you and whose next text begins with APPROVED or CHANGES REQUESTED. A verdict that only exists as a reply to the coder, and never as a GitHub review or comment, is not a review — confirm the post actually landed (re-fetch it, for example `gh pr view <n> --json reviews` or `--json comments`) before telling the coder anything. The coder waits for that GitHub-side review or comment before it merges, not for a message from you. If a ruleset demands a formal approval that no account can give, say so and let the owner approve.
 - Count rounds. A round is one review of a pushed head followed by the coder's response. After round 2 without agreement, tell the coder to stop and escalate to the coordinator with its open findings and its position on each.
 - A push after approval makes the approval stale. Review the new head before you approve again.
 - A purely cosmetic fix (a typo, a comment, a rename) does not get a full new round. Confirm the diff is cosmetic and the tests still pass, and reply in a line.

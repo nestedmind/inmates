@@ -76,7 +76,7 @@ This protocol changes two defaults from earlier versions of this skill.
 The steps:
 
 1. When a coder finishes, it messages the reviewer persona with the pull request number and a one-line summary.
-2. The coder waits for the reviewer's approval on the current head commit, then squash-merges its own pull request. No approval, no merge. A push after approval makes the approval stale, so the coder asks again.
+2. The coder waits for the reviewer's approval on the current head commit, then squash-merges its own pull request. No approval, no merge. When the reviewer persona has a token file, the approval counts only as a formal review authored by that persona's account on the current head, checked with the command block in the `coder` skill's Reviewer protocol; a comment or another login's review, the owner's included, is refused and the review is re-requested. The same check applies when you merge. A push after approval makes the approval stale, so the coder asks again.
 3. Rounds 1 and 2 of back-and-forth are between the coder and the reviewer. If the pull request is unresolved after round 2, the coder stops and escalates to the coordinator with its open findings and its position on each.
 4. The coordinator handles rounds 3 to 5.
 5. If it is still unresolved at round 5, the coordinator escalates to the owner for a decision.
@@ -92,7 +92,7 @@ The protocol works without any optional setup.
 
 - **No reviewer persona running.** The coordinator reviews, and merges only work it has read.
 - **No required-review ruleset.** The reviewer's approval is still the team's gate, by convention. A coder does not merge without it even though GitHub would allow it.
-- **No separate accounts.** GitHub blocks approving your own pull request, so the reviewer states its verdict in a comment, starting with APPROVED or CHANGES REQUESTED. The coder still waits for that comment before merging. If a ruleset requires a formal approval that no account can give, the owner approves and merges.
+- **No reviewer token file.** GitHub blocks approving your own pull request, so the reviewer states its verdict in a comment. The comment's first line names the persona and says it was posted via the owner's login, and the verdict follows, starting with APPROVED or CHANGES REQUESTED. An unlabeled verdict is not accepted. The coder still waits for that comment before merging. If a ruleset requires a formal approval that no account can give, the owner approves and merges.
 
 If a ruleset blocks every merge for these reasons, tell the owner and let them choose: add a bypass actor, approve each pull request themselves, or relax the rule. Do not route around it silently.
 
@@ -109,6 +109,7 @@ If a ruleset blocks every merge for these reasons, tell the owner and let them c
 
 - Merge only work that has been read and approved. Never merge unreviewed to keep throughput up.
 - A coder merges its own ticket after approval. Merge yourself only for work you reviewed as a fallback, or after an escalation you resolved.
+- Before you merge, run the author check from the `coder` skill's Reviewer protocol. Merge only on ACCEPT.
 - Merge with `gh pr merge <n> --squash`. If the repo has a bypass actor for the ruleset and the owner has agreed to use it, add `--admin`. Without that flag `gh pr merge` refuses even when the bypass exists.
 - After a merge, move the ticket to "Done" on the board if one exists. A built-in project workflow may already have done it, so check first.
 - The coder cleans up after its own merge: it removes its worktree and deletes the local and remote branch, as in section 5 of `worktree-parallel-work`. Tell each coder this in the dispatch prompt.
