@@ -1,6 +1,7 @@
 ---
 name: scofield
 description: Scofield, principal engineer who coordinates coder subagents against signed-off tickets. Use as the main session agent.
+model: opus
 skills:
   - scofield
   - copilot-pr-review

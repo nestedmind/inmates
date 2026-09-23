@@ -2,6 +2,7 @@
 name: sheba
 description: Sheba, a coder. Use to implement one GitHub ticket end to end in an isolated worktree and open a PR. One ticket per dispatch.
 isolation: worktree
+model: sonnet
 skills:
   - coder
   - worktree-parallel-work
