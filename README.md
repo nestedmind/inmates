@@ -116,7 +116,7 @@ A main-session agent does not preload the skills its file lists, so Scofield loa
 
 ## First run
 
-Run `/larceny:onboard` in your project. Scofield checks that `gh` is logged in, asks who you are and how you want reports, reads your `CLAUDE.md` and build files to agree the test, lint and build commands, and writes your answers to `.larceny/config.md` in the project. It adds `.larceny/` to `.gitignore`. A project board, a branch ruleset and persona accounts are offered last, and each can be skipped. One ordinary GitHub login is enough, and skipping every optional step leaves a working team. Running it again shows your current answers and asks before changing any.
+Run `/larceny:onboard` in your project. Scofield checks that `gh` is logged in, asks who you are and how you want reports, shows you the recommended per-persona model split and lets you keep it, run every persona on the harness default, or customize it (see "Model assignments" below), reads your `CLAUDE.md` and build files to agree the test, lint and build commands, and writes your answers to `.larceny/config.md` in the project. It adds `.larceny/` to `.gitignore`. A project board, a branch ruleset and persona accounts are offered last, and each can be skipped. One ordinary GitHub login is enough, and skipping every optional step leaves a working team. Running it again shows your current answers and asks before changing any.
 
 Without persona accounts the reviewer states its verdict in a comment, because GitHub does not let one login approve its own pull request. See the fallbacks in `skills/scofield/SKILL.md`.
 
@@ -165,6 +165,20 @@ Unlike the coordinator, a renamed coder is not resolved automatically at invocat
 None of this makes a shipped default agent disappear. #82 confirmed, on a real installed copy of the plugin, that `larceny:sheba`, `larceny:mahone`, `larceny:sucre`, `larceny:whip` and `larceny:scofield` stay listed and directly dispatchable through the Agent tool for as long as the plugin is installed, no matter what a project names its replacements. There is no file-naming or precedence trick that hides or removes a shipped agent type — only the coordinator's own automated dispatch is guaranteed to use a customized roster's names, because it reads them from config instead of guessing. A human picking an agent by name from the Agent-tool UI can still reach a shipped default directly.
 
 That leaves a collision-ambiguity risk, confirmed by direct test: a project's own bare name (say `arya`) and a hypothetical future plugin version shipping the same name namespaced (`larceny:arya`) coexist independently, with no overwrite and no error. This is not a functional break — the coordinator's own dispatch stays correct either way, because it reads the exact roster name from config — but it means a human could pick the wrong one from the Agent-tool UI by name alone. Avoid choosing a coder or coordinator name that could later read ambiguously against a namespaced plugin name, and prefer a name clearly distinct from the shipped cast (Scofield, Tbag, Sucre, Mahone, Sheba, Whip).
+
+## Model assignments
+
+Each persona's model is a cost decision as much as a technical one, so onboarding shows it and lets you change it. The shipped default:
+
+| Persona | Role | Model |
+|---|---|---|
+| Mahone / Sheba / Sucre / Whip | Coder | Sonnet |
+| Scofield | Coordinator | Opus |
+| Tbag | Adversarial reviewer | Opus |
+| Sara | Teacher | Opus |
+| Linc | Senior advisor | Fable |
+
+This is a recommendation, not a requirement. During onboarding you choose to keep it, run every persona on the harness's own default model, or override one or more personas individually; see step 6 in `skills/onboarding/SKILL.md`. The choice is recorded in `.larceny/config.md`'s `models:` line, separately from `coders:` (renaming a persona and picking its model are independent choices — see the onboarding skill's "Config format" section for the exact syntax). The coordinator's dispatch reads `models:` and passes any override as an explicit `model` parameter at spawn time, which takes precedence over the model baked into the shipped `agents/*.md` frontmatter or `commands/spawn-sara.md`/`spawn-linc.md`.
 
 ## Identity wiring
 
