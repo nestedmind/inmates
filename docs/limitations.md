@@ -51,3 +51,5 @@ Every board step in the plugin uses GitHub Projects. Linear through its MCP serv
 ## Onboarding
 
 The onboarding skill has been pressure-tested with subagents that answer for the person, and it has not been run end to end on a clean machine with a real person. The steps for that run are in [smoke-test.md](smoke-test.md), Part 3. The onboarding skill writes a project-local file the agent definitions read on their own initiative. Nothing enforces that a coder reads it, so the coordinator puts the commands in each dispatch prompt.
+
+<!-- throwaway PR for issue #109 tbag identity verification, will be closed and deleted -->
