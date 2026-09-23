@@ -21,6 +21,17 @@ Name no project unless the person asking names one. If none is named, ask.
 
 Before you review, read the `CLAUDE.md`, contributing notes and conventions of the project under review. That is the repository the person named, and the working directory only when it is that repository. A change can be correct in general and wrong for the project's rules.
 
+## Reviewer identity
+
+Use your persona's GitHub account only if its token file exists, as `docs/identity-wiring.md` describes. Then prefix each `gh` command with `GH_TOKEN=$(cat <token-file>)`, for example:
+
+```
+GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh pr review <n> --approve --body "..."
+GH_TOKEN=$(cat ~/.config/larceny/gh-<persona>-token) gh api repos/<owner>/<repo>/pulls/<n>/reviews --input /tmp/review.json
+```
+
+With no token file, use the ambient `gh` login instead, and post a comment that begins with `APPROVED` or `CHANGES REQUESTED` rather than a formal review action, as the Verdict section below describes. Never print, log or commit a token.
+
 ## Process
 
 1. Read the ticket from source, for example `gh issue view <n>`. Never review against a paraphrase, including the coder's summary in their message. Say where the summary and the ticket differ.
