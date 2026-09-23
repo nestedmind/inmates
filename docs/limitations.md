@@ -14,10 +14,6 @@ The repo ships a Codex manifest at `.codex-plugin/plugin.json`, and it points at
 
 An agent you start inside a Claude Code session lives as long as that session. When the session closes, the agent is gone, along with anything it remembered. Work that has to outlast a session belongs in the repo, in an issue, or in a status file that a new session can read.
 
-## Persistent agents are addressed by id, not name
-
-A persistent agent, such as a standing reviewer, receives messages through `SendMessage` with its agent id. A persona's name does not route a message to it. Record each id when you start the agent, and pass it to whoever needs to reach it. See [agent-lifecycle.md](agent-lifecycle.md) for which roles should persist.
-
 ## GitHub comments do not reach a running session
 
 An @-mention in an issue or pull request does not wake a session on your machine. See the Limitations section of the README for the workarounds.
@@ -32,7 +28,7 @@ Claude Code can refuse a coder's `gh pr merge` even after the reviewer has appro
 
 ## Spawn commands
 
-`/larceny:spawn-tbag`, `/larceny:spawn-linc` and `/larceny:spawn-sara` start a persona as a background agent. In the Claude Code version we tested, the Agent tool has no name option, so you reach the agent by its id, not by name. Ask the main session to relay: "Ask Tbag <id>: ...". The commands set a name only when the tool accepts one.
+`/larceny:spawn-tbag`, `/larceny:spawn-linc` and `/larceny:spawn-sara` start a persona as a background agent. See "Addressing a persona" and "Auto-spawn on first mention" in [agent-lifecycle.md](agent-lifecycle.md) for how to reach one afterward.
 
 ## Install and default agent are untested on a clean machine
 
