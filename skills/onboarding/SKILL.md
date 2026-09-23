@@ -49,7 +49,7 @@ Everything is stored in the project, in `.larceny/`. Do not store answers in per
 8. **Read the project.** Read `CLAUDE.md`, the contributing notes, and the build files (`Makefile`, `package.json`, `pyproject.toml` and the like). Propose the test, lint and build commands you found and any rules that bind every ticket (branch names, commit style). Ask the person to confirm or correct. Record only what they confirm. If you cannot ask, or they do not answer, write the value with `(unconfirmed)` after it and ask again next run. If you find no command, record it as unset and say so.
 9. **Write the config.** Write `.larceny/config.md`, and create `.larceny/status.md` if it does not exist (see Files). Add `.larceny/` to the project's `.gitignore` unless it is already there. Tell the person it is ignored, and that they can commit the folder if they want the team to share it. Say that a coder's fresh worktree will not contain the folder, so the coordinator puts the commands and rules in each dispatch and review request.
 10. **Offer the optional steps, each skippable, one at a time.** Say plainly that skipping all of them leaves a working team.
-    - A project board, so tickets show a status.
+    - A project board, so tickets show a status. When the board exists, look up and record its IDs (see "Board IDs" below), so the coordinator never has to find them again.
     - A branch ruleset that requires a review before merge.
     - Persona accounts, using `docs/identity-wiring.md`. A person does the account steps there, so link it and move on.
     Record each answer as `done`, `skipped` or `later`.
@@ -75,6 +75,11 @@ lint: <command or unset>
 build: <command or unset>
 rules: <one line per rule that binds every ticket>
 board: done | skipped | later
+  owner: <org or user>
+  project-number: <n>
+  project-id: <PVT_... node id>
+  status-field-id: <PVTSSF_... id>
+  status-options: <Backlog>=<id>, <Ready>=<id>, <In progress>=<id>, <In review>=<id>, <Done>=<id>
 ruleset: done | skipped | later
 identities: done | skipped | later
 ```
@@ -87,11 +92,24 @@ identities: done | skipped | later
 
 If you rename a persona (`coders:`, `reviewer:`, `advisor:` or `teacher:`) after already recording a `models:` override for its old, shipped name, re-key that override line to the new name yourself — nothing does this automatically, since the two keys are independent and a re-run does not infer the connection between them.
 
+### Board IDs
+
+The indented `board:` keys are written only when `board: done`. Look them up with:
+
+```
+gh project list --owner <owner> --format json
+gh project field-list <n> --owner <owner> --format json
+gh project view <n> --owner <owner> --format json
+```
+
+`field-list` gives the Status field id and one option id per status; `view` gives the project node id. Record every option the board has, and at least In progress, In review and Done. The per-ticket item id is not recorded here; the coordinator finds it at dispatch (see `coordinator`).
+
 ## Re-running
 
 - Never overwrite an answer without asking. Show the current value beside the new one and ask before each change.
 - A partly finished run resumes at the first missing key. Do not ask again for keys that hold a value.
 - Offer again every optional step recorded as `later`, one at a time, before you report. Keep `done` and `skipped` as they are. Record the new answer over `later`.
+- A project with `board: done` and no `owner:`, `project-number:`, `project-id:`, `status-field-id:` or `status-options:` keys was onboarded before those keys existed. Offer to look them up and record them (see "Board IDs"), instead of leaving the gap.
 - Re-check prerequisites every time. They cost nothing.
 - Change only the keys the person named. Leave the rest.
 

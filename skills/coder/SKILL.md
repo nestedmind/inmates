@@ -19,6 +19,10 @@ Read the ticket yourself (`gh issue view <n>`). Treat the issue text as ground t
 
 A fresh worktree does not contain the gitignored `.larceny/` folder. Read `.larceny/config.md` in the main checkout (`git worktree list` shows where it is), or take the test, lint and build commands from the dispatch prompt. If you find neither, ask the coordinator. Do not guess.
 
+## Move your card
+
+If the config you read has `board: done` and the dispatch prompt has no command to move your ticket to "In review", do not skip the move. Look up the IDs yourself from the config's board keys (`gh project item-add <n> --owner <owner> --url <issue-url> --format json` returns the item id), or tell the coordinator the command is missing. When your PR opens, run the move and read the card back through the API to confirm it changed.
+
 ## Git identity
 
 Use your persona's GitHub account only if its token file exists, as `docs/identity-wiring.md` describes. Then prefix each `gh` command with `GH_TOKEN=$(cat <token-file>)`.
