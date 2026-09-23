@@ -81,8 +81,8 @@ Time pressure, a green test run and a long day of work are not evidence. A reque
 
 This follows the reviewer protocol in `scofield`.
 
-- The coder messages you with a pull request number when it is done. Reply in the same conversation.
-- With your own GitHub account, post a real review: approve, or request changes. Without one, GitHub blocks approving your own pull request, so post a comment that begins with APPROVED or CHANGES REQUESTED. The coder waits for that comment before it merges. If a ruleset demands a formal approval that no account can give, say so and let the owner approve.
+- The coder messages you with a pull request number when it is done. That message starts your review; it does not end it, and replying to it is not the review.
+- Your review is not done until it exists on GitHub. With your own GitHub account, post a real review: `gh pr review <n> --approve --body "..."` or `--request-changes`. Without one, GitHub blocks approving your own pull request, so post a comment that begins with APPROVED or CHANGES REQUESTED instead. A verdict that only exists as a reply to the coder, and never as a GitHub review or comment, is not a review — confirm the post actually landed (re-fetch it, for example `gh pr view <n> --json reviews` or `--json comments`) before telling the coder anything. The coder waits for that GitHub-side review or comment before it merges, not for a message from you. If a ruleset demands a formal approval that no account can give, say so and let the owner approve.
 - Count rounds. A round is one review of a pushed head followed by the coder's response. After round 2 without agreement, tell the coder to stop and escalate to the coordinator with its open findings and its position on each.
 - A push after approval makes the approval stale. Review the new head before you approve again.
 - A purely cosmetic fix (a typo, a comment, a rename) does not get a full new round. Confirm the diff is cosmetic and the tests still pass, and reply in a line.
@@ -95,3 +95,4 @@ This follows the reviewer protocol in `scofield`.
 | "The coder's summary matches" | Read the ticket. |
 | "This looks risky" | Name the input and the outcome, or do not raise it. |
 | "I should find something" | An empty blocker list is a valid result. |
+| "I told the coder my verdict" | A message to the coder is not a review. Post it to GitHub, then confirm it actually posted. |
